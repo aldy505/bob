@@ -55,7 +55,7 @@ func (b CreateBuilder) ToSql() (string, []interface{}, error) {
 }
 
 func (d *createData) ToSql() (sqlStr string, args []interface{}, err error) {
-	if len(d.TableName) == 0 {
+	if len(d.TableName) == 0 || d.TableName == "" {
 		err = errors.New("create statements must specify a table")
 		return
 	}
@@ -85,12 +85,20 @@ func (d *createData) ToSql() (sqlStr string, args []interface{}, err error) {
 	sql.WriteString(strings.Join(columnTypes, ", "))
 	sql.WriteString(");")
 
-	if d.Primary != "" && util.IsIn(d.Columns, d.Primary) {
+	if d.Primary != "" {
+		if !util.IsIn(d.Columns, d.Primary) {
+			err = errors.New("supplied primary column name doesn't exists on columns")
+			return
+		}
 		sql.WriteString(" ")
 		sql.WriteString("ALTER TABLE `" + d.TableName + "` ADD PRIMARY KEY (`" + d.Primary + "`);")
 	}
 
-	if d.Unique != "" && util.IsIn(d.Columns, d.Unique) {
+	if d.Unique != "" {
+		if !util.IsIn(d.Columns, d.Unique) {
+			err = errors.New("supplied unique column name doesn't exists on columns")
+			return
+		}
 		sql.WriteString(" ")
 		sql.WriteString("ALTER TABLE `" + d.TableName + "` ADD UNIQUE (`" + d.Unique + "`);")
 	}
