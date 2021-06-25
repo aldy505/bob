@@ -34,6 +34,17 @@ func TestCreate(t *testing.T) {
 		}
 	})
 
+	t.Run("should be able to have a schema name", func(t *testing.T) {
+		sql, _, err := bob.CreateTable("users").WithSchema("private").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSql()
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+		result := "CREATE TABLE `private`.`users` (`name` varchar(255), `password` text, `date` date);"
+		if sql != result {
+			t.Fatal("sql is not equal to result:", sql)
+		}
+	})
+
 	t.Run("should emit error on unmatched column and types length", func(t *testing.T) {
 		_, _, err := bob.CreateTable("users").
 			Columns("id", "name", "email", "password", "date").

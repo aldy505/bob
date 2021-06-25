@@ -2,7 +2,7 @@ package bob
 
 import "io"
 
-func AppendToSql(parts []BobBuilder, w io.Writer, sep string, args []interface{}) ([]interface{}, error) {
+func appendToSql(parts []BobBuilder, w io.Writer, sep string, args []interface{}) ([]interface{}, error) {
 	for i, p := range parts {
 		partSql, partArgs, err := p.ToSql()
 		if err != nil {
@@ -25,4 +25,17 @@ func AppendToSql(parts []BobBuilder, w io.Writer, sep string, args []interface{}
 		args = append(args, partArgs...)
 	}
 	return args, nil
+}
+
+// createArgs should create an argument []interface{} for SQL query
+// I'm using the idiot approach for creating args
+func createArgs(keys ...string) []interface{} {
+	var args []interface{}
+	for _, v := range keys {
+		if v == "" {
+			continue
+		}
+		args = append(args, v)
+	}
+	return args
 }
