@@ -8,7 +8,7 @@ import (
 
 func TestCreate(t *testing.T) {
 	t.Run("should return correct sql string with basic columns and types", func(t *testing.T) {
-		sql, _, err := bob.CreateTable("users").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSql()
+		sql, _, err := bob.CreateTable("users").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSQL()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -24,7 +24,7 @@ func TestCreate(t *testing.T) {
 			Types("uuid", "varchar(255)", "varchar(255)", "text", "date").
 			Primary("id").
 			Unique("email").
-			ToSql()
+			ToSQL()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -35,7 +35,7 @@ func TestCreate(t *testing.T) {
 	})
 
 	t.Run("should be able to have a schema name", func(t *testing.T) {
-		sql, _, err := bob.CreateTable("users").WithSchema("private").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSql()
+		sql, _, err := bob.CreateTable("users").WithSchema("private").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSQL()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -49,28 +49,28 @@ func TestCreate(t *testing.T) {
 		_, _, err := bob.CreateTable("users").
 			Columns("id", "name", "email", "password", "date").
 			Types("uuid", "varchar(255)", "varchar(255)", "date").
-			ToSql()
+			ToSQL()
 		if err.Error() != "columns and types should have equal length" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
 
 	t.Run("should emit error on empty table name", func(t *testing.T) {
-		_, _, err := bob.CreateTable("").Columns("name").Types("text").ToSql()
+		_, _, err := bob.CreateTable("").Columns("name").Types("text").ToSQL()
 		if err.Error() != "create statements must specify a table" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
 
 	t.Run("should emit error for primary key not in columns", func(t *testing.T) {
-		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Primary("id").ToSql()
+		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Primary("id").ToSQL()
 		if err.Error() != "supplied primary column name doesn't exists on columns" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
 
 	t.Run("should emit error for unique key not in columns", func(t *testing.T) {
-		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Unique("id").ToSql()
+		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Unique("id").ToSQL()
 		if err.Error() != "supplied unique column name doesn't exists on columns" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}

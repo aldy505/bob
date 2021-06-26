@@ -2,12 +2,13 @@ package bob
 
 import "io"
 
-func appendToSql(parts []BobBuilder, w io.Writer, sep string, args []interface{}) ([]interface{}, error) {
+// appendToSQL - Documentation coming soon
+func appendToSQL(parts []BobBuilder, w io.Writer, sep string, args []interface{}) ([]interface{}, error) {
 	for i, p := range parts {
-		partSql, partArgs, err := p.ToSql()
+		partSQL, partArgs, err := p.ToSQL()
 		if err != nil {
 			return nil, err
-		} else if len(partSql) == 0 {
+		} else if len(partSQL) == 0 {
 			continue
 		}
 
@@ -18,7 +19,7 @@ func appendToSql(parts []BobBuilder, w io.Writer, sep string, args []interface{}
 			}
 		}
 
-		_, err = io.WriteString(w, partSql)
+		_, err = io.WriteString(w, partSQL)
 		if err != nil {
 			return nil, err
 		}

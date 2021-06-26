@@ -23,28 +23,34 @@ func init() {
 	builder.Register(HasBuilder{}, hasData{})
 }
 
+// HasTable checks for a table's existence by tableName, resolving with a boolean to signal if the table exists.
 func (h HasBuilder) HasTable(table string) HasBuilder {
 	return builder.Set(h, "Name", table).(HasBuilder)
 }
 
+// HasColumn checks if a column exists in the current table, resolves the promise with a boolean, true if the column exists, false otherwise.
 func (h HasBuilder) HasColumn(column string) HasBuilder {
 	return builder.Set(h, "Column", column).(HasBuilder)
 }
 
+// WithSchema specifies the schema to be used when using the schema-building commands.
 func (h HasBuilder) WithSchema(schema string) HasBuilder {
 	return builder.Set(h, "Schema", schema).(HasBuilder)
 }
 
+// PlaceholderFormat changes the default placeholder (?) to desired placeholder.
 func (h HasBuilder) PlaceholderFormat(f string) HasBuilder {
 	return builder.Set(h, "Placeholder", f).(HasBuilder)
 }
 
-func (h HasBuilder) ToSql() (string, []interface{}, error) {
+// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
+func (h HasBuilder) ToSQL() (string, []interface{}, error) {
 	data := builder.GetStruct(h).(hasData)
-	return data.ToSql()
+	return data.ToSQL()
 }
 
-func (d *hasData) ToSql() (sqlStr string, args []interface{}, err error) {
+// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
+func (d *hasData) ToSQL() (sqlStr string, args []interface{}, err error) {
 	sql := &bytes.Buffer{}
 	if d.Name == "" {
 		err = errors.New("has statement should have a table name")

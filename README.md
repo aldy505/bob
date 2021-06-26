@@ -19,7 +19,7 @@ func main() {
     Types("varchar(36)", "varchar(255)", "varchar(255)", "text", "date").
     Primary("id").
     Unique("email")
-    ToSql()
+    ToSQL()
   if err != nil {
     log.Fatal(err)
   }

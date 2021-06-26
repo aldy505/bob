@@ -8,13 +8,13 @@ Angular's [commit message guidelines](https://github.com/angular/angular/blob/ma
 
 Appears under "Features" header, pencil subheader:
 
-```
+```xml
 feat(pencil): add 'graphiteWidth' option
 ```
 
 Appears under "Bug Fixes" header, graphite subheader, with a link to issue #28:
 
-```
+```xml
 fix(graphite): stop graphite breaking when width < 0.1
 
 Closes #28
@@ -22,7 +22,7 @@ Closes #28
 
 Appears under "Performance Improvements" header, and under "Breaking Changes" with the breaking change explanation:
 
-```
+```xml
 perf(pencil): remove graphiteWidth option
 
 BREAKING CHANGE: The graphiteWidth option has been removed. The default graphite width of 10mm is always used for performance reason.
@@ -30,7 +30,7 @@ BREAKING CHANGE: The graphiteWidth option has been removed. The default graphite
 
 The following commit and commit `667ecc1` do not appear in the changelog if they are under the same release. If not, the revert commit appears under the "Reverts" header.
 
-```
+```xml
 revert: feat(pencil): add 'graphiteWidth' option
 
 This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
@@ -40,7 +40,7 @@ This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
 
 A commit message consists of a **header**, **body** and **footer**.  The header has a **type**, **scope** and **subject**:
 
-```
+```xml
 <type>(<scope>): <subject>
 <BLANK LINE>
 <body>
@@ -71,9 +71,9 @@ The scope could be anything specifying place of the commit change. For example `
 
 The subject contains succinct description of the change:
 
-* use the imperative, present tense: "change" not "changed" nor "changes"
-* don't capitalize first letter
-* no dot (.) at the end
+  * use the imperative, present tense: "change" not "changed" nor "changes"
+  * don't capitalize first letter
+  * no dot (.) at the end
 
 ### Body
 
@@ -87,14 +87,6 @@ reference GitHub issues that this commit **Closes**.
 
 **Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
 
-A detailed explanation can be found in this [document](#commit-message-format).
+A detailed explanation can be found in this [document][commit-message-format].
 
-[npm-image]: https://badge.fury.io/js/conventional-changelog-angular.svg
-[npm-url]: https://npmjs.org/package/conventional-changelog-angular
-[travis-image]: https://travis-ci.org/conventional-changelog/conventional-changelog-angular.svg?branch=master
-[travis-url]: https://travis-ci.org/conventional-changelog/conventional-changelog-angular
-[daviddm-image]: https://david-dm.org/conventional-changelog/conventional-changelog-angular.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/conventional-changelog/conventional-changelog-angular
-[coveralls-image]: https://coveralls.io/repos/conventional-changelog/conventional-changelog-angular/badge.svg
-[coveralls-url]: https://coveralls.io/r/conventional-changelog/conventional-changelog-angular
 [commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#

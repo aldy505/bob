@@ -25,36 +25,44 @@ func init() {
 	builder.Register(CreateBuilder{}, createData{})
 }
 
+// Name sets the table name
 func (b CreateBuilder) Name(name string) CreateBuilder {
 	return builder.Set(b, "TableName", name).(CreateBuilder)
 }
 
+// WithSchema specifies the schema to be used when using the schema-building commands.
 func (b CreateBuilder) WithSchema(name string) CreateBuilder {
 	return builder.Set(b, "Schema", name).(CreateBuilder)
 }
 
+// Columns sets the column names
 func (b CreateBuilder) Columns(cols ...string) CreateBuilder {
 	return builder.Set(b, "Columns", cols).(CreateBuilder)
 }
 
+// Types set a type for certain column
 func (b CreateBuilder) Types(types ...string) CreateBuilder {
 	return builder.Set(b, "Types", types).(CreateBuilder)
 }
 
+// Primary will set that column as the primary key for a table.
 func (b CreateBuilder) Primary(column string) CreateBuilder {
 	return builder.Set(b, "Primary", column).(CreateBuilder)
 }
 
+// Unique adds an unique index to a table over the given columns.
 func (b CreateBuilder) Unique(column string) CreateBuilder {
 	return builder.Set(b, "Unique", column).(CreateBuilder)
 }
 
-func (b CreateBuilder) ToSql() (string, []interface{}, error) {
+// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
+func (b CreateBuilder) ToSQL() (string, []interface{}, error) {
 	data := builder.GetStruct(b).(createData)
-	return data.ToSql()
+	return data.ToSQL()
 }
 
-func (d *createData) ToSql() (sqlStr string, args []interface{}, err error) {
+// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
+func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
 	if len(d.TableName) == 0 || d.TableName == "" {
 		err = errors.New("create statements must specify a table")
 		return
