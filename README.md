@@ -8,22 +8,59 @@ Oh, and of course, heavily inspired by Bob the Builder.
 
 ## Usage
 
-It's not ready for production (yet). But, the API is probably close to how you'd do things on Squirrel.
+It's not ready for production yet. But, the API is probably close to how you'd do things on Squirrel. This is an example for using with pgx.
 
 ```go
-import "github.com/aldy505/bob"
+import (
+  "context"
+  "log"
+  "strings"
+
+  "github.com/aldy505/bob"
+  "github.com/jackc/pgx/v4"
+)
 
 func main() {
-  sql, _, err := bob.CreateTable("users").
-    Columns("id", "email", "name", "password", "date").
-    Types("varchar(36)", "varchar(255)", "varchar(255)", "text", "date").
-    Primary("id").
-    Unique("email")
-    ToSQL()
+  db := pgx.Connect()
+
+  // Check if a table is exists
+  sql, args, err = bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSQL()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+  var hasTableUsers bool
+  err = db.QueryRow(context.Background(), sql, args...).Scan(&hasTableUsers)
   if err != nil {
-    log.Fatal(err)
+    if err.Error() == "no rows in result set" {
+			hasTableUsers = false
+		} else {
+			log.Fatal(err)
+		}
   }
 
-  // process SQL with whatever you like it
+  if !hasTableUsers {
+    // Create "users" table
+    // Note that this will return multiple query in a single string.
+    sql, _, err := bob.CreateTable("users").
+      Columns("id", "email", "name", "password", "date").
+      Types("varchar(36)", "varchar(255)", "varchar(255)", "text", "date").
+      Primary("id").
+      Unique("email")
+      ToSQL()
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    // If you don't do this, you will get the error:
+    // ERROR: cannot insert multiple commands into a prepared statement (SQLSTATE 42601)
+    splitQuery := strings.Split(sql, ";")
+    for i := range splitQuery {
+      _, err = db.Query(context.Background(), splitQuery[i])
+			if err != nil {
+        log.Fatal(err)
+			}
+    }
+  }
 }
 ```
