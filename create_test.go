@@ -12,7 +12,7 @@ func TestCreate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE `users` (`name` varchar(255), `password` text, `date` date);"
+		result := "CREATE TABLE \"users\" (\"name\" varchar(255), \"password\" text, \"date\" date);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
@@ -28,7 +28,7 @@ func TestCreate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE `users` (`id` uuid, `name` varchar(255), `email` varchar(255), `password` text, `date` date); ALTER TABLE `users` ADD PRIMARY KEY (`id`); ALTER TABLE `users` ADD UNIQUE (`email`);"
+		result := "CREATE TABLE \"users\" (\"id\" uuid, \"name\" varchar(255), \"email\" varchar(255), \"password\" text, \"date\" date); ALTER TABLE \"users\" ADD PRIMARY KEY (\"id\"); ALTER TABLE \"users\" ADD UNIQUE (\"email\");"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
@@ -39,7 +39,7 @@ func TestCreate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE `private`.`users` (`name` varchar(255), `password` text, `date` date);"
+		result := "CREATE TABLE \"private\".\"users\" (\"name\" varchar(255), \"password\" text, \"date\" date);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}

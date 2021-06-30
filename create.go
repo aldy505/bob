@@ -78,15 +78,15 @@ func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
 	sql.WriteString("CREATE TABLE ")
 
 	if d.Schema != "" {
-		sql.WriteString("`" + d.Schema + "`.")
+		sql.WriteString("\"" + d.Schema + "\".")
 	}
 
-	sql.WriteString("`" + d.TableName + "`")
+	sql.WriteString("\"" + d.TableName + "\"")
 	sql.WriteString(" ")
 
 	var columnTypes []string
 	for i := 0; i < len(d.Columns); i++ {
-		columnTypes = append(columnTypes, "`"+d.Columns[i]+"` "+d.Types[i])
+		columnTypes = append(columnTypes, "\""+d.Columns[i]+"\" "+d.Types[i])
 	}
 
 	sql.WriteString("(")
@@ -99,7 +99,7 @@ func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
 			return
 		}
 		sql.WriteString(" ")
-		sql.WriteString("ALTER TABLE `" + d.TableName + "` ADD PRIMARY KEY (`" + d.Primary + "`);")
+		sql.WriteString("ALTER TABLE \"" + d.TableName + "\" ADD PRIMARY KEY (\"" + d.Primary + "\");")
 	}
 
 	if d.Unique != "" {
@@ -108,7 +108,7 @@ func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
 			return
 		}
 		sql.WriteString(" ")
-		sql.WriteString("ALTER TABLE `" + d.TableName + "` ADD UNIQUE (`" + d.Unique + "`);")
+		sql.WriteString("ALTER TABLE \"" + d.TableName + "\" ADD UNIQUE (\"" + d.Unique + "\");")
 	}
 	sqlStr = sql.String()
 	return
