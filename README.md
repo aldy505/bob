@@ -25,18 +25,18 @@ func main() {
 
   // Check if a table is exists
   sql, args, err = bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSQL()
-	if err != nil {
-		log.Fatal(err)
-	}
+  if err != nil {
+    log.Fatal(err)
+  }
 
   var hasTableUsers bool
   err = db.QueryRow(context.Background(), sql, args...).Scan(&hasTableUsers)
   if err != nil {
     if err.Error() == "no rows in result set" {
-			hasTableUsers = false
-		} else {
-			log.Fatal(err)
-		}
+      hasTableUsers = false
+    } else {
+      log.Fatal(err)
+    }
   }
 
   if !hasTableUsers {
@@ -57,9 +57,9 @@ func main() {
     splitQuery := strings.Split(sql, ";")
     for i := range splitQuery {
       _, err = db.Query(context.Background(), splitQuery[i])
-			if err != nil {
+      if err != nil {
         log.Fatal(err)
-			}
+      }
     }
   }
 }
