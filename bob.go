@@ -5,9 +5,9 @@ import "github.com/lann/builder"
 // BobBuilderType is the type for BobBuilder
 type BobBuilderType builder.Builder
 
-// BobBuilder interface wraps the ToSQL method
+// BobBuilder interface wraps the ToSql method
 type BobBuilder interface {
-	ToSQL() (string, []interface{}, error)
+	ToSql() (string, []interface{}, error)
 }
 
 // CreateTable creates a table with CreateBuilder interface

@@ -10,7 +10,7 @@ import (
 
 func TestHas(t *testing.T) {
 	t.Run("should be able to create a hasTable query", func(t *testing.T) {
-		sql, args, err := bob.HasTable("users").ToSQL()
+		sql, args, err := bob.HasTable("users").ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -26,7 +26,7 @@ func TestHas(t *testing.T) {
 	})
 
 	t.Run("should be able to create a hasColumn query", func(t *testing.T) {
-		sql, args, err := bob.HasTable("users").HasColumn("name").ToSQL()
+		sql, args, err := bob.HasTable("users").HasColumn("name").ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -42,7 +42,7 @@ func TestHas(t *testing.T) {
 	})
 
 	t.Run("should be able to create a hasColumn query (but reversed)", func(t *testing.T) {
-		sql, args, err := bob.HasColumn("name").HasTable("users").ToSQL()
+		sql, args, err := bob.HasColumn("name").HasTable("users").ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -58,7 +58,7 @@ func TestHas(t *testing.T) {
 	})
 
 	t.Run("should be able to create a hasTable query with schema", func(t *testing.T) {
-		sql, args, err := bob.HasTable("users").WithSchema("private").ToSQL()
+		sql, args, err := bob.HasTable("users").WithSchema("private").ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -74,7 +74,7 @@ func TestHas(t *testing.T) {
 	})
 
 	t.Run("should be able to have a different placeholder", func(t *testing.T) {
-		sql, args, err := bob.HasTable("users").HasColumn("name").PlaceholderFormat(bob.Dollar).ToSQL()
+		sql, args, err := bob.HasTable("users").HasColumn("name").PlaceholderFormat(bob.Dollar).ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -90,7 +90,7 @@ func TestHas(t *testing.T) {
 	})
 
 	t.Run("should expect an error for no table name", func(t *testing.T) {
-		_, _, err := bob.HasTable("").ToSQL()
+		_, _, err := bob.HasTable("").ToSql()
 		if err.Error() != "has statement should have a table name" {
 			t.Fatal("error is different:", err.Error())
 		}

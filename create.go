@@ -61,14 +61,14 @@ func (b CreateBuilder) Unique(column string) CreateBuilder {
 	return builder.Set(b, "Unique", column).(CreateBuilder)
 }
 
-// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
-func (b CreateBuilder) ToSQL() (string, []interface{}, error) {
+// ToSql returns 3 variables filled out with the correct values based on bindings, etc.
+func (b CreateBuilder) ToSql() (string, []interface{}, error) {
 	data := builder.GetStruct(b).(createData)
-	return data.ToSQL()
+	return data.ToSql()
 }
 
-// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
-func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
+// ToSql returns 3 variables filled out with the correct values based on bindings, etc.
+func (d *createData) ToSql() (sqlStr string, args []interface{}, err error) {
 	if len(d.TableName) == 0 || d.TableName == "" {
 		err = errors.New("create statements must specify a table")
 		return

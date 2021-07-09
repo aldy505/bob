@@ -44,14 +44,14 @@ func (h HasBuilder) PlaceholderFormat(f string) HasBuilder {
 	return builder.Set(h, "Placeholder", f).(HasBuilder)
 }
 
-// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
-func (h HasBuilder) ToSQL() (string, []interface{}, error) {
+// ToSql returns 3 variables filled out with the correct values based on bindings, etc.
+func (h HasBuilder) ToSql() (string, []interface{}, error) {
 	data := builder.GetStruct(h).(hasData)
-	return data.ToSQL()
+	return data.ToSql()
 }
 
-// ToSQL returns 3 variables filled out with the correct values based on bindings, etc.
-func (d *hasData) ToSQL() (sqlStr string, args []interface{}, err error) {
+// ToSql returns 3 variables filled out with the correct values based on bindings, etc.
+func (d *hasData) ToSql() (sqlStr string, args []interface{}, err error) {
 	sql := &bytes.Buffer{}
 	if d.Name == "" {
 		err = errors.New("has statement should have a table name")

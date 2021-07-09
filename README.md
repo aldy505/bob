@@ -24,7 +24,7 @@ func main() {
   db := pgx.Connect()
 
   // Check if a table is exists
-  sql, args, err = bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSQL()
+  sql, args, err = bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSql()
   if err != nil {
     log.Fatal(err)
   }
@@ -47,7 +47,7 @@ func main() {
       Types("varchar(36)", "varchar(255)", "varchar(255)", "text", "date").
       Primary("id").
       Unique("email")
-      ToSQL()
+      ToSql()
     if err != nil {
       log.Fatal(err)
     }
