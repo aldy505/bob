@@ -12,13 +12,14 @@ import (
 type CreateBuilder builder.Builder
 
 type createData struct {
-	TableName string
-	Schema    string
-	Columns   []string
-	Types     []string
-	Primary   string
-	Unique    string
-	NotNull   []string
+	TableName   string
+	IfNotExists bool
+	Schema      string
+	Columns     []string
+	Types       []string
+	Primary     string
+	Unique      string
+	NotNull     []string
 }
 
 func init() {
@@ -28,6 +29,11 @@ func init() {
 // Name sets the table name
 func (b CreateBuilder) Name(name string) CreateBuilder {
 	return builder.Set(b, "TableName", name).(CreateBuilder)
+}
+
+// IfNotExists adds IF NOT EXISTS to the query
+func (b CreateBuilder) IfNotExists() CreateBuilder {
+	return builder.Set(b, "IfNotExists", true).(CreateBuilder)
 }
 
 // WithSchema specifies the schema to be used when using the schema-building commands.
@@ -76,6 +82,10 @@ func (d *createData) ToSQL() (sqlStr string, args []interface{}, err error) {
 	sql := &bytes.Buffer{}
 
 	sql.WriteString("CREATE TABLE ")
+
+	if d.IfNotExists {
+		sql.WriteString("IF NOT EXISTS ")
+	}
 
 	if d.Schema != "" {
 		sql.WriteString("\"" + d.Schema + "\".")

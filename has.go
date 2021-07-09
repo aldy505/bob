@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 
+	"github.com/aldy505/bob/util"
 	"github.com/lann/builder"
 )
 
@@ -71,6 +72,6 @@ func (d *hasData) ToSQL() (sqlStr string, args []interface{}, err error) {
 	}
 
 	sqlStr = ReplacePlaceholder(sql.String(), d.Placeholder)
-	args = createArgs(d.Name, d.Column, d.Schema)
+	args = util.CreateArgs(d.Name, d.Column, d.Schema)
 	return
 }

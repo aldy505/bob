@@ -15,6 +15,10 @@ func (b BobBuilderType) CreateTable(table string) CreateBuilder {
 	return CreateBuilder(b).Name(table)
 }
 
+func (b BobBuilderType) CreateTableIfNotExists(table string) CreateBuilder {
+	return CreateBuilder(b).Name(table).IfNotExists()
+}
+
 // HasTable checks if a table exists with HasBuilder interface
 func (b BobBuilderType) HasTable(table string) HasBuilder {
 	return HasBuilder(b).HasTable(table)
@@ -31,6 +35,11 @@ var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 // CreateTable creates a table with CreateBuilder interface
 func CreateTable(table string) CreateBuilder {
 	return BobStmtBuilder.CreateTable(table)
+}
+
+// CreateTableIfNotExists creates a table with CreateBuilder interface, if the table doesn't exists
+func CreateTableIfNotExists(table string) CreateBuilder {
+	return BobStmtBuilder.CreateTableIfNotExists(table)
 }
 
 // HasTable checks if a table exists with HasBuilder interface

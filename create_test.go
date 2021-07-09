@@ -75,4 +75,15 @@ func TestCreate(t *testing.T) {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
+
+	t.Run("should emit create if not exists", func(t *testing.T) {
+		sql, _, err := bob.CreateTableIfNotExists("users").Columns("name").Types("text").ToSQL()
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+		result := "CREATE TABLE IF NOT EXISTS \"users\" (\"name\" text);"
+		if sql != result {
+			t.Fatal("sql is not equal to result: ", sql)
+		}
+	})
 }
