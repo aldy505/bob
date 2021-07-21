@@ -28,7 +28,7 @@ func ReplacePlaceholder(sql string, format string) string {
 		format = Question
 	}
 
-	if format == Dollar || format == Colon {
+	if format == Dollar || format == Colon || format == AtP {
 		separate := strings.SplitAfter(sql, "?")
 		for i := 0; i < len(separate); i++ {
 			separate[i] = strings.Replace(separate[i], "?", format+strconv.Itoa(i+1), 1)
