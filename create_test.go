@@ -24,12 +24,14 @@ func TestCreate(t *testing.T) {
 			JSONColumn("json").
 			JSONBColumn("jsonb").
 			BlobColumn("blob").
+			RealColumn("real").
+			FloatColumn("float").
 			AddColumn(bob.ColumnDef{Name: "custom", Type: "custom"}).
 			ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"users\" (\"uuid\" UUID, \"string\" VARCHAR(255), \"text\" TEXT, \"date\" DATE, \"boolean\" BOOLEAN, \"integer\" INTEGER, \"int\" INT, \"timestamp\" TIMESTAMP, \"time\" TIME, \"date\" DATE, \"datetime\" DATETIME, \"json\" JSON, \"jsonb\" JSONB, \"blob\" BLOB, \"custom\" custom);"
+		result := "CREATE TABLE \"users\" (\"uuid\" UUID, \"string\" VARCHAR(255), \"text\" TEXT, \"date\" DATE, \"boolean\" BOOLEAN, \"integer\" INTEGER, \"int\" INT, \"timestamp\" TIMESTAMP, \"time\" TIME, \"date\" DATE, \"datetime\" DATETIME, \"json\" JSON, \"jsonb\" JSONB, \"blob\" BLOB, \"real\" REAL, \"float\" FLOAT, \"custom\" custom);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}

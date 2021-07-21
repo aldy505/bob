@@ -99,6 +99,26 @@ func (b CreateBuilder) IntColumn(name string, extras ...string) CreateBuilder {
 	}).(CreateBuilder)
 }
 
+// RealColumn only available for MSSQL, PostgreSQL, and SQLite.
+// For MySQL, please refer to FloatColumn, or create your own with AddColumn() with Type: "DOUBLE".
+func (b CreateBuilder) RealColumn(name string, extras ...string) CreateBuilder {
+	return builder.Append(b, "Columns", ColumnDef{
+		Name:   name,
+		Type:   "REAL",
+		Extras: extras,
+	}).(CreateBuilder)
+}
+
+// FloatColumn only available for MySQL and MSSQL.
+// For PostgreSQL and SQLite, please refer to RealColumn.
+func (b CreateBuilder) FloatColumn(name string, extras ...string) CreateBuilder {
+	return builder.Append(b, "Columns", ColumnDef{
+		Name:   name,
+		Type:   "FLOAT",
+		Extras: extras,
+	}).(CreateBuilder)
+}
+
 func (b CreateBuilder) DateTimeColumn(name string, extras ...string) CreateBuilder {
 	return builder.Append(b, "Columns", ColumnDef{
 		Name:   name,
