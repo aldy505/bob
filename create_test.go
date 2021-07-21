@@ -7,81 +7,94 @@ import (
 )
 
 func TestCreate(t *testing.T) {
-	t.Run("should return correct sql string with basic columns and types", func(t *testing.T) {
-		sql, _, err := bob.CreateTable("users").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSql()
+	t.Run("should return correct sql string with all columns and types", func(t *testing.T) {
+		sql, _, err := bob.
+			CreateTable("users").
+			UUIDColumn("uuid").
+			StringColumn("string").
+			TextColumn("text").
+			DateColumn("date").
+			BooleanColumn("boolean").
+			IntegerColumn("integer").
+			IntColumn("int").
+			TimeStampColumn("timestamp").
+			TimeColumn("time").
+			DateColumn("date").
+			DateTimeColumn("datetime").
+			JSONColumn("json").
+			JSONBColumn("jsonb").
+			BlobColumn("blob").
+			RealColumn("real").
+			FloatColumn("float").
+			AddColumn(bob.ColumnDef{Name: "custom", Type: "custom"}).
+			ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"users\" (\"name\" varchar(255), \"password\" text, \"date\" date);"
+		result := "CREATE TABLE \"users\" (\"uuid\" UUID, \"string\" VARCHAR(255), \"text\" TEXT, \"date\" DATE, \"boolean\" BOOLEAN, \"integer\" INTEGER, \"int\" INT, \"timestamp\" TIMESTAMP, \"time\" TIME, \"date\" DATE, \"datetime\" DATETIME, \"json\" JSON, \"jsonb\" JSONB, \"blob\" BLOB, \"real\" REAL, \"float\" FLOAT, \"custom\" custom);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
 	})
 
-	t.Run("should return correct sql with primary key and unique key", func(t *testing.T) {
+	t.Run("should return correct sql with extras", func(t *testing.T) {
 		sql, _, err := bob.CreateTable("users").
-			Columns("id", "name", "email", "password", "date").
-			Types("uuid", "varchar(255)", "varchar(255)", "text", "date").
-			Primary("id").
-			Unique("email").
+			UUIDColumn("id", "PRIMARY KEY").
+			StringColumn("email", "NOT NULL", "UNIQUE").
 			ToSql()
+
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"users\" (\"id\" uuid, \"name\" varchar(255), \"email\" varchar(255), \"password\" text, \"date\" date); ALTER TABLE \"users\" ADD PRIMARY KEY (\"id\"); ALTER TABLE \"users\" ADD UNIQUE (\"email\");"
+		result := "CREATE TABLE \"users\" (\"id\" UUID PRIMARY KEY, \"email\" VARCHAR(255) NOT NULL UNIQUE);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
 	})
 
 	t.Run("should be able to have a schema name", func(t *testing.T) {
-		sql, _, err := bob.CreateTable("users").WithSchema("private").Columns("name", "password", "date").Types("varchar(255)", "text", "date").ToSql()
+		sql, _, err := bob.
+			CreateTable("users").
+			WithSchema("private").
+			StringColumn("name").
+			ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"private\".\"users\" (\"name\" varchar(255), \"password\" text, \"date\" date);"
+		result := "CREATE TABLE \"private\".\"users\" (\"name\" VARCHAR(255));"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
 	})
 
-	t.Run("should emit error on unmatched column and types length", func(t *testing.T) {
-		_, _, err := bob.CreateTable("users").
-			Columns("id", "name", "email", "password", "date").
-			Types("uuid", "varchar(255)", "varchar(255)", "date").
-			ToSql()
-		if err.Error() != "columns and types should have equal length" {
-			t.Fatal("should throw an error, it didn't:", err.Error())
-		}
-	})
-
 	t.Run("should emit error on empty table name", func(t *testing.T) {
-		_, _, err := bob.CreateTable("").Columns("name").Types("text").ToSql()
+		_, _, err := bob.
+			CreateTable("").
+			StringColumn("name").
+			ToSql()
 		if err.Error() != "create statements must specify a table" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
 
-	t.Run("should emit error for primary key not in columns", func(t *testing.T) {
-		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Primary("id").ToSql()
-		if err.Error() != "supplied primary column name doesn't exists on columns" {
-			t.Fatal("should throw an error, it didn't:", err.Error())
-		}
-	})
-
-	t.Run("should emit error for unique key not in columns", func(t *testing.T) {
-		_, _, err := bob.CreateTable("users").Columns("name").Types("text").Unique("id").ToSql()
-		if err.Error() != "supplied unique column name doesn't exists on columns" {
+	t.Run("should emit error if no column were specified", func(t *testing.T) {
+		_, _, err := bob.
+			CreateTable("users").
+			ToSql()
+		if err.Error() != "a table should at least have one column" {
 			t.Fatal("should throw an error, it didn't:", err.Error())
 		}
 	})
 
 	t.Run("should emit create if not exists", func(t *testing.T) {
-		sql, _, err := bob.CreateTableIfNotExists("users").Columns("name").Types("text").ToSql()
+		sql, _, err := bob.
+			CreateTableIfNotExists("users").
+			TextColumn("name").
+			ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE IF NOT EXISTS \"users\" (\"name\" text);"
+		result := "CREATE TABLE IF NOT EXISTS \"users\" (\"name\" TEXT);"
 		if sql != result {
 			t.Fatal("sql is not equal to result: ", sql)
 		}

@@ -1,6 +1,13 @@
 package bob
 
-import "github.com/lann/builder"
+import (
+	"errors"
+
+	"github.com/lann/builder"
+)
+
+var ErrEmptyTable = errors.New("sql: no rows in result set")
+var ErrEmptyTablePgx = errors.New("no rows in result set")
 
 // BobBuilderType is the type for BobBuilder
 type BobBuilderType builder.Builder

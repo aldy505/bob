@@ -30,7 +30,7 @@ func TestReplacePlaceholder(t *testing.T) {
 	t.Run("should be able to replace placeholder to @p", func(t *testing.T) {
 		sql := "INSERT INTO table_name (`col1`, `col2`, `col3`) VALUES (?, ?, ?), (?, ?, ?), (?, ?, ?);"
 		result := bob.ReplacePlaceholder(sql, bob.AtP)
-		should := "INSERT INTO table_name (`col1`, `col2`, `col3`) VALUES (@p, @p, @p), (@p, @p, @p), (@p, @p, @p);"
+		should := "INSERT INTO table_name (`col1`, `col2`, `col3`) VALUES (@p1, @p2, @p3), (@p4, @p5, @p6), (@p7, @p8, @p9);"
 
 		if result != should {
 			t.Fatal("result string doesn't match:", result)
