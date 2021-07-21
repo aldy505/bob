@@ -12,7 +12,83 @@ import "github.com/aldy505/bob"
 
 ## Usage
 
-It's not ready for production yet. But, the API is probably close to how you'd do things on Squirrel. This is an example for using with pgx.
+It's not ready for large-scale production yet (I've already using it on one of my projects). But, the API is probably close to how you'd do things on Squirrel. 
+
+### Create a table
+
+```go
+import "github.com/aldy505/bob"
+
+func main() {
+  // Note that CREATE TABLE don't return args params.
+  sql, _, err := bob.
+    CreateTable("tableName").
+    // The first parameter is the column's name.
+    // The second parameters and so on forth are extras.
+    StringColumn("id", "NOT NULL", "PRIMARY KEY", "AUTOINCREMENT").
+    StringColumn("email", "NOT NULL", "UNIQUE").
+    // See the list of available column definition type through pkg.go.dev or scroll down below.
+    TextColumn("password").
+    ToSql()
+  if err != nil {
+    // handle your error
+  }
+}
+```
+
+Another builder of `bob.CreateTableIfNotExists()` is also available.
+
+### Check if a table exists
+
+```go
+func main() {
+  sql, args, err := bob.HasTable("users").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
+### Check if a column exists
+
+```go
+func main() {
+  sql, args, err := bob.HasColumn("email").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
+### Placeholder format
+
+Default placeholder is a question mark (MySQL-like). If you want to change it, simply use something like this:
+
+```go
+func main() {
+  // Option 1
+  sql, args, err := bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  // Option 2
+  sql, args, err = bob.HasTable("users").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+  correctPlaceholder := bob.ReplacePlaceholder(sql, bob.Dollar)
+}
+```
+
+Available placeholder formats:
+* `bob.Question` - `INSERT INTO "users" (name) VALUES (?)`
+* `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
+* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
+* `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
+
+
+### With pgx (PostgreSQL)
 
 ```go
 import (
