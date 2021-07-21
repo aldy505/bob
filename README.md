@@ -2,9 +2,9 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/aldy505/bob.svg)](https://pkg.go.dev/github.com/aldy505/bob) [![Go Report Card](https://goreportcard.com/badge/github.com/aldy505/bob)](https://goreportcard.com/report/github.com/aldy505/bob) ![GitHub](https://img.shields.io/github/license/aldy505/bob) [![CodeFactor](https://www.codefactor.io/repository/github/aldy505/bob/badge)](https://www.codefactor.io/repository/github/aldy505/bob) [![codecov](https://codecov.io/gh/aldy505/bob/branch/master/graph/badge.svg?token=Noeexg5xEJ)](https://codecov.io/gh/aldy505/bob) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9b78970127c74c1a923533e05f65848d)](https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aldy505/bob&amp;utm_campaign=Badge_Grade) [![Build test](https://github.com/aldy505/bob/actions/workflows/build.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/build.yml) [![Test and coverage](https://github.com/aldy505/bob/actions/workflows/coverage.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/coverage.yml)
 
-I really need a create table SQL builder, and I can't find one. So, like everything else, I made one. Heavily inspired by [Squirrel](https://github.com/Masterminds/squirrel) and [Knex](https://knexjs.org/). And of course, I still use Squirrel for other types of queries (insert, select, and all), think this package as an extension for Squirrel.
+Think of this as an extension of [Squirrel](https://github.com/Masterminds/squirrel) with functionability like [Knex](https://knexjs.org/). I still use Squirrel for other types of queries (insert, select, and all that), but I needed some SQL builder for create table and some other stuffs.
 
-Oh, and of course, heavily inspired by Bob the Builder.
+Oh, and of course, heavily inspired by [Bob the Builder](https://en.wikipedia.org/wiki/Bob_the_Builder).
 
 ```go
 import "github.com/aldy505/bob"
@@ -36,7 +36,7 @@ func main() {
   var hasTableUsers bool
   err = db.QueryRow(context.Background(), sql, args...).Scan(&hasTableUsers)
   if err != nil {
-    if err.Error() == "no rows in result set" {
+    if err == bob.ErrEmptyTablePg {
       hasTableUsers = false
     } else {
       log.Fatal(err)
@@ -46,46 +46,60 @@ func main() {
   if !hasTableUsers {
     // Create "users" table
     // Note that this will return multiple query in a single string.
-    sql, _, err := bob.CreateTable("users").
-      Columns("id", "email", "name", "password", "date").
-      Types("varchar(36)", "varchar(255)", "varchar(255)", "text", "date").
-      Primary("id").
-      Unique("email")
+    sql, _, err := bob.
+      CreateTable("users").
+      IntegerColumn("id", "PRIMARY KEY", "SERIAL").
+      StringColumn("name", "NOT NULL").
+      TextColumn("password", "NOT NULL").
+      DateColumn("created_at").
       ToSql()
     if err != nil {
       log.Fatal(err)
     }
 
-    // If you don't do this, you will get the error:
-    // ERROR: cannot insert multiple commands into a prepared statement (SQLSTATE 42601)
-    splitQuery := strings.Split(sql, ";")
-    for i := range splitQuery {
-      _, err = db.Query(context.Background(), splitQuery[i])
-      if err != nil {
-        log.Fatal(err)
-      }
+    _, err = db.Query(context.Background(), splitQuery[i])
+    if err != nil {
+      log.Fatal(err)
     }
 
     // Create another table, this time with CREATE TABLE IF NOT EXISTS
-    sql, _, err := bob.CreateTableIfNotExists("inventory").
-      Columns("id", "userID", "items", "quantity").
-      Types("varchar(36)", "varchar(36)", "json", "int").
-      Primary("id").
+    sql, _, err := bob.
+      CreateTableIfNotExists("inventory").
+      UUIDColumn("id", "PRIMARY KEY").
+      IntegerColumn("userID", "FOREIGN KEY REFERENCES users(id)").
+      JSONColumn("items").
+      IntegerColumn("quantity").
       ToSql()
     if err != nil {
       log.Fatal(err)
     }
     
-    inventoryQuery := strings.Split(sql, ";")
-    for i := range inventoryQuery {
-      _, err = db.Query(context.Background(), inventoryQuery[i])
-      if err != nil {
-        log.Fatal(err)
-      }
+    _, err = db.Query(context.Background(), inventoryQuery[i])
+    if err != nil {
+      log.Fatal(err)
     }
   }
 }
 ```
+
+## Features
+
+* `bob.CreateTable(tableName)` - Basic SQL create table
+* `bob.CreateTableIfNotExists(tableName)` - Create table if not exists
+* `bob.HasTable(tableName)` - Checks if column exists (return error if false, check example above for error handling)
+* `bob.HasColumn(columnName)` - Check if a column exists on current table
+
+### TODO
+
+Meaning these are some ideas for the future development of Bob.
+
+* `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
+* `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
+* `bob.RenameTable(tableName)` - Rename a table (`rename table "users" to "old_users"`)
+* `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
+* `bob.Upsert(tableName)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
+* `bob.ExecWith()` - Just like Squirrel's [ExecWith](https://pkg.go.dev/github.com/Masterminds/squirrel?utm_source=godoc#ExecWith)
+* `bob.Count(tableName, columnName)` - Count query (`select count("active") from "users"`)
 
 ## Contributing
 
