@@ -12,7 +12,7 @@ import "github.com/aldy505/bob"
 
 ## Usage
 
-It's not ready for large-scale production yet (I've already using it on one of my projects). But, the API is probably close to how you'd do things on Squirrel. 
+It's not ready for large-scale production yet (although I've already using it on one of my projects). But, the API is probably close to how you'd do things on Squirrel. 
 
 ### Create a table
 
@@ -20,16 +20,16 @@ It's not ready for large-scale production yet (I've already using it on one of m
 import "github.com/aldy505/bob"
 
 func main() {
-  // Note that CREATE TABLE don't return args params.
+  // Note that CREATE TABLE doesn't returns args params.
   sql, _, err := bob.
     CreateTable("tableName").
     // The first parameter is the column's name.
     // The second parameters and so on forth are extras.
     StringColumn("id", "NOT NULL", "PRIMARY KEY", "AUTOINCREMENT").
     StringColumn("email", "NOT NULL", "UNIQUE").
-    // See the list of available column definition type through pkg.go.dev or scroll down below.
+    // See the list of available column definition types through pkg.go.dev or scroll down below.
     TextColumn("password").
-    // Or add your custom types
+    // Or add your custom type.
     AddColumn(bob.ColumnDef{Name: "tableName", Type: "customType", Extras: []string{"NOT NULL"}}).
     ToSql()
   if err != nil {
@@ -38,7 +38,7 @@ func main() {
 }
 ```
 
-Available column definition types:
+Available column definition types (please be aware that some only works on certain database):
 * `StringColumn()` - Default to `VARCHAR(255)`
 * `TextColumn()` - Default to `TEXT`
 * `UUIDColumn()` - Defaults to `UUID`
@@ -81,7 +81,7 @@ func main() {
 }
 ```
 
-### Placeholder format
+### Placeholder format / Dialect
 
 Default placeholder is a question mark (MySQL-like). If you want to change it, simply use something like this:
 
@@ -141,7 +141,6 @@ func main() {
 
   if !hasTableUsers {
     // Create "users" table
-    // Note that this will return multiple query in a single string.
     sql, _, err := bob.
       CreateTable("users").
       IntegerColumn("id", "PRIMARY KEY", "SERIAL").
