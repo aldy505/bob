@@ -29,12 +29,33 @@ func main() {
     StringColumn("email", "NOT NULL", "UNIQUE").
     // See the list of available column definition type through pkg.go.dev or scroll down below.
     TextColumn("password").
+    // Or add your custom types
+    AddColumn(bob.ColumnDef{Name: "tableName", Type: "customType", Extras: []string{"NOT NULL"}}).
     ToSql()
   if err != nil {
     // handle your error
   }
 }
 ```
+
+Available column definition types:
+* `StringColumn()` - Default to `VARCHAR(255)`
+* `TextColumn()` - Default to `TEXT`
+* `UUIDColumn()` - Defaults to `UUID`
+* `BooleanColumn()` - Defaults to `BOOLEAN`
+* `IntegerColumn()` - Defaults to `INTEGER`. Postgres and SQLite only.
+* `IntColumn()` - Defaults to `INT`. MySQL and MSSQL only.
+* `RealColumn()` - Defaults to `REAL`. Postgres, MSSQL, and SQLite only.
+* `FloatColumn()` - Defaults to `FLOAT`. Postgres and SQLite only.
+* `DateTimeColumn()` - Defaults to `DATETIME`.
+* `TimeStampColumn()` - Defaults to `TIMESTAMP`.
+* `TimeColumn()` - Defaults to `TIME`.
+* `DateColumn()` - Defaults to `DATE`.
+* `JSONColumn()` - Dafults to `JSON`. MySQL and Postgres only.
+* `JSONBColumn()` - Defaults to `JSONB`. Postgres only.
+* `BlobColumn()` - Defaults to `BLOB`. MySQL and SQLite only.
+
+For any other types, please use `AddColumn()`.
 
 Another builder of `bob.CreateTableIfNotExists()` is also available.
 
@@ -86,7 +107,6 @@ Available placeholder formats:
 * `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
 * `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
 * `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
-
 
 ### With pgx (PostgreSQL)
 
