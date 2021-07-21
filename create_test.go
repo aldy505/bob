@@ -40,16 +40,13 @@ func TestCreate(t *testing.T) {
 	t.Run("should return correct sql with extras", func(t *testing.T) {
 		sql, _, err := bob.CreateTable("users").
 			UUIDColumn("id", "PRIMARY KEY").
-			StringColumn("name").
 			StringColumn("email", "NOT NULL", "UNIQUE").
-			TextColumn("password").
-			DateTimeColumn("date").
 			ToSql()
 
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"users\" (\"id\" UUID PRIMARY KEY, \"name\" VARCHAR(255), \"email\" VARCHAR(255) NOT NULL UNIQUE, \"password\" TEXT, \"date\" DATETIME);"
+		result := "CREATE TABLE \"users\" (\"id\" UUID PRIMARY KEY, \"email\" VARCHAR(255) NOT NULL UNIQUE);"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
@@ -60,13 +57,11 @@ func TestCreate(t *testing.T) {
 			CreateTable("users").
 			WithSchema("private").
 			StringColumn("name").
-			TextColumn("password").
-			DateColumn("date").
 			ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		result := "CREATE TABLE \"private\".\"users\" (\"name\" VARCHAR(255), \"password\" TEXT, \"date\" DATE);"
+		result := "CREATE TABLE \"private\".\"users\" (\"name\" VARCHAR(255));"
 		if sql != result {
 			t.Fatal("sql is not equal to result:", sql)
 		}
