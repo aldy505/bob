@@ -36,6 +36,22 @@ func (b BobBuilderType) HasColumn(column string) HasBuilder {
 	return HasBuilder(b).HasColumn(column)
 }
 
+func (b BobBuilderType) DropTable(table string) DropBuilder {
+	return DropBuilder(b).DropTable(table)
+}
+
+func (b BobBuilderType) DropTableIfExists(table string) DropBuilder {
+	return DropBuilder(b).DropTable(table).IfExists()
+}
+
+func (b BobBuilderType) RenameTable(from, to string) RenameBuilder {
+	return RenameBuilder(b).From(from).To(to)
+}
+
+func (b BobBuilderType) Truncate(table string) TruncateBuilder {
+	return TruncateBuilder(b).Truncate(table)
+}
+
 // BobStmtBuilder is the parent builder for BobBuilderType
 var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 
@@ -57,4 +73,20 @@ func HasTable(table string) HasBuilder {
 // HasColumn checks if a column exists with HasBuilder interface
 func HasColumn(col string) HasBuilder {
 	return BobStmtBuilder.HasColumn(col)
+}
+
+func DropTable(table string) DropBuilder {
+	return BobStmtBuilder.DropTable(table)
+}
+
+func DropTableIfExists(table string) DropBuilder {
+	return BobStmtBuilder.DropTableIfExists(table)
+}
+
+func RenameTable(from, to string) RenameBuilder {
+	return BobStmtBuilder.RenameTable(from, to)
+}
+
+func Truncate(table string) TruncateBuilder {
+	return BobStmtBuilder.Truncate(table)
 }
