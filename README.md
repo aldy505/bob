@@ -81,6 +81,41 @@ func main() {
 }
 ```
 
+### Drop table
+
+```go
+func main() {
+  sql, _, err := bob.DropTable("users").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
+You could also do `bob.DropTableIfExists("users")` to output a `DROP TABLE IF EXISTS "users"` query.
+
+### Truncate table
+
+```go
+func main() {
+  sql, _, err := bob.Truncate("users").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
+### Rename table
+
+```go
+func main() {
+  sql, _, err := bob.RenameTable("users", "people").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
 ### Placeholder format / Dialect
 
 Default placeholder is a question mark (MySQL-like). If you want to change it, simply use something like this:
@@ -105,7 +140,7 @@ func main() {
 Available placeholder formats:
 * `bob.Question` - `INSERT INTO "users" (name) VALUES (?)`
 * `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
-* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
+* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)` (Yes, I know this is kinda wrong. I'm thinking of removing it.)
 * `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
 
 ### With pgx (PostgreSQL)
@@ -183,15 +218,15 @@ func main() {
 * `bob.CreateTableIfNotExists(tableName)` - Create table if not exists
 * `bob.HasTable(tableName)` - Checks if column exists (return error if false, check example above for error handling)
 * `bob.HasColumn(columnName)` - Check if a column exists on current table
+* `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
+* `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
+* `bob.RenameTable(currentTable, desiredName)` - Rename a table (`rename table "users" to "people"`)
+* `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
 
 ### TODO
 
 Meaning these are some ideas for the future development of Bob.
 
-* `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
-* `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
-* `bob.RenameTable(tableName)` - Rename a table (`rename table "users" to "old_users"`)
-* `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
 * `bob.Upsert(tableName)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
 * `bob.ExecWith()` - Just like Squirrel's [ExecWith](https://pkg.go.dev/github.com/Masterminds/squirrel?utm_source=godoc#ExecWith)
 * `bob.Count(tableName, columnName)` - Count query (`select count("active") from "users"`)
