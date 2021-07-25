@@ -144,4 +144,12 @@ func TestUpsert(t *testing.T) {
 			t.Error(err)
 		}
 	})
+
+	t.Run("should emit error if dialect not supported", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", 100).Columns("name", "email").Values("James", "james@mail.com").Replace("name", "Thomas").ToSql()
+		if err.Error() != "provided database dialect is not supported" {
+			t.Log(err.Error())
+			t.Error(err)
+		}
+	})
 }
