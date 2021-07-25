@@ -101,4 +101,47 @@ func TestUpsert(t *testing.T) {
 			t.Error("args is not the same as result: ", args)
 		}
 	})
+
+	t.Run("should emit error without table name", func(t *testing.T) {
+		_, _, err := bob.Upsert("", bob.Mysql).ToSql()
+		if err == nil && err.Error() != "upsert statement must specify a table" {
+			t.Error(err)
+		}
+	})
+
+	t.Run("should emit error without columns", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", bob.Postgresql).ToSql()
+		if err.Error() != "upsert statement must have at least one column" {
+			t.Error(err)
+		}
+	})
+
+	t.Run("should emit error without values", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", bob.Postgresql).Columns("name", "email").ToSql()
+		if err.Error() != "upsert statements must have at least one set of values" {
+			t.Error(err)
+		}
+	})
+
+	t.Run("should emit error without replaces", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", bob.Postgresql).Columns("name", "email").Values("James", "james@mail.com").ToSql()
+		if err.Error() != "upsert statement must have at least one key value pair to be replaced" {
+			t.Error(err)
+		}
+	})
+
+	t.Run("should emit error without key and value for mssql", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", bob.MSSql).Columns("name", "email").Values("James", "james@mail.com").Replace("name", "Thomas").ToSql()
+		if err.Error() != "unique key and value must be provided for MS SQL" {
+			t.Error(err)
+		}
+	})
+
+	t.Run("should emit error without key and value for mssql", func(t *testing.T) {
+		_, _, err := bob.Upsert("users", bob.Sqlite).Columns("name", "email").Values("James", "james@mail.com").Replace("name", "Thomas").ToSql()
+		if err.Error() != "unique key must be provided for PostgreSQL and SQLite" {
+			t.Log(err.Error())
+			t.Error(err)
+		}
+	})
 }

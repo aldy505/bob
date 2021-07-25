@@ -72,12 +72,12 @@ func (u UpsertBuilder) ToSql() (string, []interface{}, error) {
 
 // ToSql returns 3 variables filled out with the correct values based on bindings, etc.
 func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
-	if len(d.Into) == 0 {
+	if len(d.Into) == 0 || d.Into == "" {
 		err = errors.New("upsert statements must specify a table")
 		return
 	}
 
-	if len(d.Columns) == 0 {
+	if len(d.Columns) == 0 || d.Columns[0] == "" {
 		err = errors.New("upsert statement must have at least one column")
 		return
 	}
@@ -97,7 +97,9 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 	if d.Dialect == MSSql {
 		if len(d.Key) == 0 {
 			err = errors.New("unique key and value must be provided for MS SQL")
+			return
 		}
+		
 		sql.WriteString("IF NOT EXISTS (SELECT * FROM \""+d.Into+"\" WHERE \""+d.Key[0].(string)+"\" = ?) ")
 		args = append(args, d.Key[1])
 	}
