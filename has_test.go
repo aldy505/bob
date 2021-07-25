@@ -1,6 +1,7 @@
 package bob_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/aldy505/bob"
@@ -19,8 +20,8 @@ func TestHas(t *testing.T) {
 		if sql != result {
 			t.Fatal("sql is not equal with result:", sql)
 		}
-
-		if len(args) != 1 {
+		argsResult := []interface{}{"users"}
+		if !reflect.DeepEqual(args, argsResult) {
 			t.Fatal("args is not equal with argsResult:", args)
 		}
 	})
@@ -36,7 +37,8 @@ func TestHas(t *testing.T) {
 			t.Fatal("sql is not equal with result:", sql)
 		}
 
-		if len(args) != 2 {
+		argsResult := []interface{}{"users", "name"}
+		if !reflect.DeepEqual(args, argsResult) {
 			t.Fatal("args is not equal with argsResult:", args)
 		}
 	})
@@ -52,7 +54,8 @@ func TestHas(t *testing.T) {
 			t.Fatal("sql is not equal with result:", sql)
 		}
 
-		if len(args) != 2 {
+		argsResult := []interface{}{"users", "name"}
+		if !reflect.DeepEqual(args, argsResult) {
 			t.Fatal("args is not equal with argsResult:", args)
 		}
 	})
@@ -68,12 +71,13 @@ func TestHas(t *testing.T) {
 			t.Fatal("sql is not equal with result:", sql)
 		}
 
-		if len(args) != 2 {
+		argsResult := []interface{}{"users", "private"}
+		if !reflect.DeepEqual(args, argsResult) {
 			t.Fatal("args is not equal with argsResult:", args)
 		}
 	})
 
-	t.Run("should be able to have a different placeholder", func(t *testing.T) {
+	t.Run("should be able to have a different placeholder - dollar", func(t *testing.T) {
 		sql, args, err := bob.HasTable("users").HasColumn("name").PlaceholderFormat(bob.Dollar).ToSql()
 		if err != nil {
 			t.Fatal(err.Error())
@@ -84,7 +88,8 @@ func TestHas(t *testing.T) {
 			t.Fatal("sql is not equal with result:", sql)
 		}
 
-		if len(args) != 2 {
+		argsResult := []interface{}{"users", "name"}
+		if !reflect.DeepEqual(args, argsResult) {
 			t.Fatal("args is not equal with argsResult:", args)
 		}
 	})

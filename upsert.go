@@ -24,42 +24,49 @@ func init() {
 	builder.Register(UpsertBuilder{}, upsertData{})
 }
 
-func (b UpsertBuilder) dialect(db int) UpsertBuilder {
-	return builder.Set(b, "Dialect", db).(UpsertBuilder)
+func (u UpsertBuilder) dialect(db int) UpsertBuilder {
+	return builder.Set(u, "Dialect", db).(UpsertBuilder)
 }
 
 // Table sets which table to be dropped
-func (b UpsertBuilder) Into(name string) UpsertBuilder {
-	return builder.Set(b, "Into", name).(UpsertBuilder)
+func (u UpsertBuilder) Into(name string) UpsertBuilder {
+	return builder.Set(u, "Into", name).(UpsertBuilder)
 }
 
-func (b UpsertBuilder) Columns(columns ...string) UpsertBuilder {
-	return builder.Extend(b, "Columns", columns).(UpsertBuilder)
+func (u UpsertBuilder) Columns(columns ...string) UpsertBuilder {
+	return builder.Extend(u, "Columns", columns).(UpsertBuilder)
 }
 
 // Values sets the values in relation with the columns.
 // Please not that only string, int, and bool type are supported.
 // Inputting other types other than those might result in your SQL not working properly.
-func (b UpsertBuilder) Values(values ...interface{}) UpsertBuilder {
-	return builder.Append(b, "Values", values).(UpsertBuilder)
+func (u UpsertBuilder) Values(values ...interface{}) UpsertBuilder {
+	return builder.Append(u, "Values", values).(UpsertBuilder)
 }
 
-func (b UpsertBuilder) Key(key ...interface{}) UpsertBuilder {
-	return builder.Extend(b, "Key", []interface{}{key[0], key[1]}).(UpsertBuilder)
+func (u UpsertBuilder) Key(key ...interface{}) UpsertBuilder {
+	var value interface{}
+	column := key[0]
+	if len(key) > 1 && key[0] != nil {
+		value = key[1]
+	} else {
+		value = ""
+	}
+	return builder.Extend(u, "Key", []interface{}{column, value}).(UpsertBuilder)
 }
 
-func (b UpsertBuilder) Replace(column interface{}, value interface{}) UpsertBuilder {
-	return builder.Extend(b, "Replace", []interface{}{column, value}).(UpsertBuilder)
+func (u UpsertBuilder) Replace(column interface{}, value interface{}) UpsertBuilder {
+	return builder.Append(u, "Replace", []interface{}{column, value}).(UpsertBuilder)
 }
 
 // PlaceholderFormat changes the default placeholder (?) to desired placeholder.
-func (b UpsertBuilder) PlaceholderFormat(f string) UpsertBuilder {
-	return builder.Set(b, "Placeholder", f).(UpsertBuilder)
+func (u UpsertBuilder) PlaceholderFormat(f string) UpsertBuilder {
+	return builder.Set(u, "Placeholder", f).(UpsertBuilder)
 }
 
 // ToSql returns 3 variables filled out with the correct values based on bindings, etc.
-func (b UpsertBuilder) ToSql() (string, []interface{}, error) {
-	data := builder.GetStruct(b).(upsertData)
+func (u UpsertBuilder) ToSql() (string, []interface{}, error) {
+	data := builder.GetStruct(u).(upsertData)
 	return data.ToSql()
 }
 
@@ -121,6 +128,7 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 	}
 	
 	sql.WriteString(strings.Join(values, ", "))
+	sql.WriteString(" ")
 
 	var replaces []string
 	for i := 0; i < len(d.Replace); i++ {
@@ -137,6 +145,11 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 	} else if d.Dialect == Postgresql || d.Dialect == Sqlite {
 		// INSERT INTO players (user_name, age) VALUES('steven', 32) ON CONFLICT(user_name) DO UPDATE SET age=excluded.age;
 		
+		if len(d.Key) == 0 {
+			err = errors.New("unique key must be provided for PostgreSQL and SQLite")
+			return
+		}
+
 		sql.WriteString("ON CONFLICT ")
 		sql.WriteString("(\""+d.Key[0].(string)+"\") ")
 		sql.WriteString("DO UPDATE SET ")
