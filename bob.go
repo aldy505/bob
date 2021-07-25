@@ -10,6 +10,15 @@ import (
 var ErrEmptyTable = errors.New("sql: no rows in result set")
 // ErrEmptyTable is a common pgx error if a table is empty or no rows is returned by the query.
 var ErrEmptyTablePgx = errors.New("no rows in result set")
+// ErrDialectNotSupported tells you whether the dialect is supported or not.
+var ErrDialectNotSupported = errors.New("provided database dialect is not supported")
+
+const (
+	Mysql int = iota
+	Postgresql
+	Sqlite
+	MSSql
+)
 
 // BobBuilderType is the type for BobBuilder
 type BobBuilderType builder.Builder
@@ -59,6 +68,10 @@ func (b BobBuilderType) Truncate(table string) TruncateBuilder {
 	return TruncateBuilder(b).Truncate(table)
 }
 
+func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
+	return UpsertBuilder(b).dialect(dialect).Into(table)
+}
+
 // BobStmtBuilder is the parent builder for BobBuilderType
 var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 
@@ -100,4 +113,10 @@ func RenameTable(from, to string) RenameBuilder {
 // Truncate performs TRUNCATE function. It deletes all contents from a table but not deleting the table.
 func Truncate(table string) TruncateBuilder {
 	return BobStmtBuilder.Truncate(table)
+}
+
+// Upsert performs a UPSERT query with specified database dialect.
+// Supported database includes MySQL, PostgreSQL, SQLite and MSSQL.
+func Upsert(table string, dialect int) UpsertBuilder {
+	return BobStmtBuilder.Upsert(table, dialect)
 }
