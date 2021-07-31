@@ -19,11 +19,11 @@ func init() {
 }
 
 // DropTable sets which table to be dropped
-func (b DropBuilder) DropTable(name string) DropBuilder {
+func (b DropBuilder) dropTable(name string) DropBuilder {
 	return builder.Set(b, "TableName", name).(DropBuilder)
 }
 
-func (b DropBuilder) IfExists() DropBuilder {
+func (b DropBuilder) ifExists() DropBuilder {
 	return builder.Set(b, "IfExists", true).(DropBuilder)
 }
 

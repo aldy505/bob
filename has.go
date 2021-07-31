@@ -8,9 +8,6 @@ import (
 	"github.com/lann/builder"
 )
 
-// TODO - The whole file is a todo
-// Meant to find two things: HasTable and HasColumn(s)
-
 type HasBuilder builder.Builder
 
 type hasData struct {

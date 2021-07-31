@@ -17,7 +17,7 @@ func init() {
 }
 
 // Truncate sets which table to be dropped
-func (b TruncateBuilder) Truncate(name string) TruncateBuilder {
+func (b TruncateBuilder) truncate(name string) TruncateBuilder {
 	return builder.Set(b, "TableName", name).(TruncateBuilder)
 }
 

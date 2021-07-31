@@ -17,13 +17,13 @@ func init() {
 	builder.Register(RenameBuilder{}, renameData{})
 }
 
-// From sets existing table name
-func (b RenameBuilder) From(name string) RenameBuilder {
+// from sets existing table name
+func (b RenameBuilder) from(name string) RenameBuilder {
 	return builder.Set(b, "From", name).(RenameBuilder)
 }
 
-// To sets desired table name
-func (b RenameBuilder) To(name string) RenameBuilder {
+// to sets desired table name
+func (b RenameBuilder) to(name string) RenameBuilder {
 	return builder.Set(b, "To", name).(RenameBuilder)
 }
 

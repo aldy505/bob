@@ -30,12 +30,12 @@ type BobBuilder interface {
 
 // CreateTable creates a table with CreateBuilder interface
 func (b BobBuilderType) CreateTable(table string) CreateBuilder {
-	return CreateBuilder(b).Name(table)
+	return CreateBuilder(b).name(table)
 }
 
 // CreateTableIfNotExists creates a table with CreateBuilder interface, if the table doesn't exists.
 func (b BobBuilderType) CreateTableIfNotExists(table string) CreateBuilder {
-	return CreateBuilder(b).Name(table).IfNotExists()
+	return CreateBuilder(b).name(table).ifNotExists()
 }
 
 // HasTable checks if a table exists with HasBuilder interface
@@ -50,22 +50,22 @@ func (b BobBuilderType) HasColumn(column string) HasBuilder {
 
 // DropTable drops (delete contents & remove) a table from the database.
 func (b BobBuilderType) DropTable(table string) DropBuilder {
-	return DropBuilder(b).DropTable(table)
+	return DropBuilder(b).dropTable(table)
 }
 
 // DropTable drops (delete contents & remove) a table from the database if the table exists.
 func (b BobBuilderType) DropTableIfExists(table string) DropBuilder {
-	return DropBuilder(b).DropTable(table).IfExists()
+	return DropBuilder(b).dropTable(table).ifExists()
 }
 
 // RenameTable simply renames an exisisting table.
 func (b BobBuilderType) RenameTable(from, to string) RenameBuilder {
-	return RenameBuilder(b).From(from).To(to)
+	return RenameBuilder(b).from(from).to(to)
 }
 
 // Truncate performs TRUNCATE function. It deletes all contents from a table but not deleting the table.
 func (b BobBuilderType) Truncate(table string) TruncateBuilder {
-	return TruncateBuilder(b).Truncate(table)
+	return TruncateBuilder(b).truncate(table)
 }
 
 func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
