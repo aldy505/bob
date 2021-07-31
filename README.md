@@ -178,7 +178,7 @@ func main() {
 Available placeholder formats:
 * `bob.Question` - `INSERT INTO "users" (name) VALUES (?)`
 * `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
-* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)` (Yes, I know this is kinda wrong. I'm thinking of removing it.)
+* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
 * `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
 
 ### With pgx (PostgreSQL)
