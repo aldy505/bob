@@ -100,7 +100,7 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 
 	sql := &bytes.Buffer{}
 
-	if d.Dialect == MSSql {
+	if d.Dialect == MSSQL {
 		if len(d.Key) == 0 {
 			err = errors.New("unique key and value must be provided for MS SQL")
 			return
@@ -145,12 +145,12 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 		replaces = append(replaces, replace)
 	}
 
-	if d.Dialect == Mysql {
+	if d.Dialect == MySQL {
 		// INSERT INTO table (col) VALUES (values) ON DUPLICATE KEY UPDATE col = value
 		
 		sql.WriteString("ON DUPLICATE KEY UPDATE ")
 		sql.WriteString(strings.Join(replaces, ", "))
-	} else if d.Dialect == Postgresql || d.Dialect == Sqlite {
+	} else if d.Dialect == PostgreSQL || d.Dialect == SQLite {
 		// INSERT INTO players (user_name, age) VALUES('steven', 32) ON CONFLICT(user_name) DO UPDATE SET age=excluded.age;
 		
 		if len(d.Key) == 0 {
@@ -163,7 +163,7 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 		sql.WriteString("DO UPDATE SET ")
 		sql.WriteString(strings.Join(replaces, ", "))
 
-	} else if d.Dialect == MSSql {
+	} else if d.Dialect == MSSQL {
 		// IF NOT EXISTS (SELECT * FROM dbo.Table1 WHERE ID = @ID)
     //    INSERT INTO dbo.Table1(ID, Name, ItemName, ItemCatName, ItemQty)
     //    VALUES(@ID, @Name, @ItemName, @ItemCatName, @ItemQty)

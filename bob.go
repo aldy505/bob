@@ -14,10 +14,10 @@ var ErrEmptyTablePgx = errors.New("no rows in result set")
 var ErrDialectNotSupported = errors.New("provided database dialect is not supported")
 
 const (
-	Mysql int = iota
-	Postgresql
-	Sqlite
-	MSSql
+	MySQL int = iota
+	PostgreSQL
+	SQLite
+	MSSQL
 )
 
 // BobBuilderType is the type for BobBuilder
@@ -76,6 +76,23 @@ func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
 var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 
 // CreateTable creates a table with CreateBuilder interface.
+// Refer to README for available column definition types.
+//
+//      // Note that CREATE TABLE doesn't returns args params.
+//      sql, _, err := bob.
+//        CreateTable("tableName").
+//        // The first parameter is the column's name.
+//        // The second parameters and so on forth are extras.
+//        StringColumn("id", "NOT NULL", "PRIMARY KEY", "AUTOINCREMENT").
+//        StringColumn("email", "NOT NULL", "UNIQUE").
+//        // See the list of available column definition types through pkg.go.dev or README.
+//        TextColumn("password").
+//        // Or add your custom type.
+//        AddColumn(bob.ColumnDef{Name: "tableName", Type: "customType", Extras: []string{"NOT NULL"}}).
+//        ToSql()
+//      if err != nil {
+//      // handle your error
+//      }
 func CreateTable(table string) CreateBuilder {
 	return BobStmtBuilder.CreateTable(table)
 }
@@ -117,6 +134,39 @@ func Truncate(table string) TruncateBuilder {
 
 // Upsert performs a UPSERT query with specified database dialect.
 // Supported database includes MySQL, PostgreSQL, SQLite and MSSQL.
+//
+//       // MySQL example:
+//       sql, args, err := bob.
+//         // Notice that you should give database dialect on the second params.
+//         // Available database dialect are MySQL, PostgreSQL, SQLite, and MSSQL.
+//         Upsert("users", bob.MySQL).
+//         Columns("name", "email", "age").
+//         // You could do multiple Values() call, but I'd suggest to not do it.
+//         // Because this is an upsert function, not an insert one.
+//         Values("Thomas Mueler", "tmueler@something.com", 25).
+//         Replace("age", 25).
+//         PlaceholderFormat(bob.Question).
+//         ToSql()
+//      
+//       // Another example for PostgreSQL:
+//       sql, args, err = bob.
+//         Upsert("users", bob.PostgreSQL).
+//         Columns("name", "email", "age").
+//         Values("Billy Urtha", "billu@something.com", 30).
+//         Key("email").
+//         Replace("age", 40).
+//         PlaceholderFormat(bob.Dollar).
+//         ToSql()
+//      
+//       // One more time, for MSSQL / SQL Server:
+//       sql, args, err = bob.
+//         Upsert("users", bob.MSSQL).
+//         Columns("name", "email", "age").
+//         Values("George Rust", "georgee@something.com", 19).
+//         Key("email", "georgee@something.com").
+//         Replace("age", 18).
+//         PlaceholderFormat(bob.AtP).
+//         ToSql()
 func Upsert(table string, dialect int) UpsertBuilder {
 	return BobStmtBuilder.Upsert(table, dialect)
 }
