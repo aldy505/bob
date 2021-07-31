@@ -7,8 +7,6 @@ import (
 	"github.com/aldy505/bob"
 )
 
-// TODO - do more test
-
 func TestHas(t *testing.T) {
 	t.Run("should be able to create a hasTable query", func(t *testing.T) {
 		sql, args, err := bob.HasTable("users").ToSql()

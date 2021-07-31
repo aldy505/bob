@@ -11,12 +11,12 @@ import (
 type UpsertBuilder builder.Builder
 
 type upsertData struct {
-	Dialect int
-	Into string
-	Columns []string
-	Values [][]interface{}
-	Key []interface{}
-	Replace [][]interface{}
+	Dialect     int
+	Into        string
+	Columns     []string
+	Values      [][]interface{}
+	Key         []interface{}
+	Replace     [][]interface{}
 	Placeholder string
 }
 
@@ -60,7 +60,7 @@ func (u UpsertBuilder) Key(key ...interface{}) UpsertBuilder {
 }
 
 // Replace sets the column and value respectively for the data to be changed on
-// a specific row. 
+// a specific row.
 func (u UpsertBuilder) Replace(column interface{}, value interface{}) UpsertBuilder {
 	return builder.Append(u, "Replace", []interface{}{column, value}).(UpsertBuilder)
 }
@@ -105,13 +105,13 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 			err = errors.New("unique key and value must be provided for MS SQL")
 			return
 		}
-		
-		sql.WriteString("IF NOT EXISTS (SELECT * FROM \""+d.Into+"\" WHERE \""+d.Key[0].(string)+"\" = ?) ")
+
+		sql.WriteString("IF NOT EXISTS (SELECT * FROM \"" + d.Into + "\" WHERE \"" + d.Key[0].(string) + "\" = ?) ")
 		args = append(args, d.Key[1])
 	}
 
 	sql.WriteString("INSERT INTO ")
-	sql.WriteString("\""+d.Into+"\"")
+	sql.WriteString("\"" + d.Into + "\"")
 	sql.WriteString(" ")
 
 	var columns []string
@@ -134,7 +134,7 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 		}
 		values = append(values, "("+strings.Join(tempValues, ", ")+")")
 	}
-	
+
 	sql.WriteString(strings.Join(values, ", "))
 	sql.WriteString(" ")
 
@@ -147,45 +147,45 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 
 	if d.Dialect == MySQL {
 		// INSERT INTO table (col) VALUES (values) ON DUPLICATE KEY UPDATE col = value
-		
+
 		sql.WriteString("ON DUPLICATE KEY UPDATE ")
 		sql.WriteString(strings.Join(replaces, ", "))
 	} else if d.Dialect == PostgreSQL || d.Dialect == SQLite {
 		// INSERT INTO players (user_name, age) VALUES('steven', 32) ON CONFLICT(user_name) DO UPDATE SET age=excluded.age;
-		
+
 		if len(d.Key) == 0 {
 			err = errors.New("unique key must be provided for PostgreSQL and SQLite")
 			return
 		}
 
 		sql.WriteString("ON CONFLICT ")
-		sql.WriteString("(\""+d.Key[0].(string)+"\") ")
+		sql.WriteString("(\"" + d.Key[0].(string) + "\") ")
 		sql.WriteString("DO UPDATE SET ")
 		sql.WriteString(strings.Join(replaces, ", "))
 
 	} else if d.Dialect == MSSQL {
 		// IF NOT EXISTS (SELECT * FROM dbo.Table1 WHERE ID = @ID)
-    //    INSERT INTO dbo.Table1(ID, Name, ItemName, ItemCatName, ItemQty)
-    //    VALUES(@ID, @Name, @ItemName, @ItemCatName, @ItemQty)
-    // ELSE
-    //    UPDATE dbo.Table1
-    //    SET Name = @Name,
-    //        ItemName = @ItemName,
-    //        ItemCatName = @ItemCatName,
-    //        ItemQty = @ItemQty
-    //    WHERE ID = @ID
+		//    INSERT INTO dbo.Table1(ID, Name, ItemName, ItemCatName, ItemQty)
+		//    VALUES(@ID, @Name, @ItemName, @ItemCatName, @ItemQty)
+		// ELSE
+		//    UPDATE dbo.Table1
+		//    SET Name = @Name,
+		//        ItemName = @ItemName,
+		//        ItemCatName = @ItemCatName,
+		//        ItemQty = @ItemQty
+		//    WHERE ID = @ID
 
 		sql.WriteString("ELSE ")
-		sql.WriteString("UPDATE \""+d.Into+"\" SET ")
+		sql.WriteString("UPDATE \"" + d.Into + "\" SET ")
 		sql.WriteString(strings.Join(replaces, ", "))
-		sql.WriteString(" WHERE \""+d.Key[0].(string)+"\" = ?")
+		sql.WriteString(" WHERE \"" + d.Key[0].(string) + "\" = ?")
 		args = append(args, d.Key[1])
 
 	} else {
 		err = ErrDialectNotSupported
 		return
 	}
-	
+
 	sql.WriteString(";")
 
 	sqlStr = ReplacePlaceholder(sql.String(), d.Placeholder)

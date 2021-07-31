@@ -8,8 +8,10 @@ import (
 
 // ErrEmptyTable is a common database/sql error if a table is empty or no rows is returned by the query.
 var ErrEmptyTable = errors.New("sql: no rows in result set")
+
 // ErrEmptyTable is a common pgx error if a table is empty or no rows is returned by the query.
 var ErrEmptyTablePgx = errors.New("no rows in result set")
+
 // ErrDialectNotSupported tells you whether the dialect is supported or not.
 var ErrDialectNotSupported = errors.New("provided database dialect is not supported")
 
@@ -147,7 +149,7 @@ func Truncate(table string) TruncateBuilder {
 //         Replace("age", 25).
 //         PlaceholderFormat(bob.Question).
 //         ToSql()
-//      
+//
 //       // Another example for PostgreSQL:
 //       sql, args, err = bob.
 //         Upsert("users", bob.PostgreSQL).
@@ -157,7 +159,7 @@ func Truncate(table string) TruncateBuilder {
 //         Replace("age", 40).
 //         PlaceholderFormat(bob.Dollar).
 //         ToSql()
-//      
+//
 //       // One more time, for MSSQL / SQL Server:
 //       sql, args, err = bob.
 //         Upsert("users", bob.MSSQL).

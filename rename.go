@@ -10,7 +10,7 @@ type RenameBuilder builder.Builder
 
 type renameData struct {
 	From string
-	To string
+	To   string
 }
 
 func init() {
@@ -38,6 +38,6 @@ func (d *renameData) ToSql() (sqlStr string, args []interface{}, err error) {
 	if len(d.From) == 0 || d.From == "" || len(d.To) == 0 || d.To == "" {
 		err = errors.New("rename statement must specify a table")
 	}
-	sqlStr = "RENAME TABLE \""+d.From+"\" TO \""+d.To+"\";"
+	sqlStr = "RENAME TABLE \"" + d.From + "\" TO \"" + d.To + "\";"
 	return
 }

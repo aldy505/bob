@@ -32,6 +32,6 @@ func (d *truncateData) ToSql() (sqlStr string, args []interface{}, err error) {
 	if len(d.TableName) == 0 || d.TableName == "" {
 		err = errors.New("truncate statement must specify a table")
 	}
-	sqlStr = "TRUNCATE \""+d.TableName+"\";"
+	sqlStr = "TRUNCATE \"" + d.TableName + "\";"
 	return
 }
