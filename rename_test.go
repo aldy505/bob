@@ -7,7 +7,7 @@ import (
 )
 
 func TestRename(t *testing.T) {
-	t.Run("should be able to create rename query", func (t *testing.T)  {
+	t.Run("should be able to create rename query", func(t *testing.T) {
 		sql, _, err := bob.RenameTable("users", "teachers").ToSql()
 		if err != nil {
 			t.Error(err)
@@ -25,4 +25,4 @@ func TestRename(t *testing.T) {
 			t.Error(err)
 		}
 	})
-} 
+}

@@ -11,7 +11,7 @@ type DropBuilder builder.Builder
 
 type dropData struct {
 	TableName string
-	IfExists bool
+	IfExists  bool
 }
 
 func init() {
@@ -19,11 +19,11 @@ func init() {
 }
 
 // DropTable sets which table to be dropped
-func (b DropBuilder) DropTable(name string) DropBuilder {
+func (b DropBuilder) dropTable(name string) DropBuilder {
 	return builder.Set(b, "TableName", name).(DropBuilder)
 }
 
-func (b DropBuilder) IfExists() DropBuilder {
+func (b DropBuilder) ifExists() DropBuilder {
 	return builder.Set(b, "IfExists", true).(DropBuilder)
 }
 
@@ -45,8 +45,8 @@ func (d *dropData) ToSql() (sqlStr string, args []interface{}, err error) {
 	if d.IfExists {
 		sql.WriteString("IF EXISTS ")
 	}
-	
-	sql.WriteString("\""+d.TableName+"\";")
+
+	sql.WriteString("\"" + d.TableName + "\";")
 
 	sqlStr = sql.String()
 	return

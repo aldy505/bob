@@ -7,7 +7,7 @@ import (
 )
 
 func TestTruncate(t *testing.T) {
-	t.Run("should be able to create truncate query", func (t *testing.T)  {
+	t.Run("should be able to create truncate query", func(t *testing.T) {
 		sql, _, err := bob.Truncate("users").ToSql()
 		if err != nil {
 			t.Error(err)
@@ -25,4 +25,4 @@ func TestTruncate(t *testing.T) {
 			t.Error(err)
 		}
 	})
-} 
+}

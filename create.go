@@ -27,13 +27,13 @@ func init() {
 	builder.Register(CreateBuilder{}, createData{})
 }
 
-// Name sets the table name
-func (b CreateBuilder) Name(name string) CreateBuilder {
+// name sets the table name
+func (b CreateBuilder) name(name string) CreateBuilder {
 	return builder.Set(b, "TableName", name).(CreateBuilder)
 }
 
-// IfNotExists adds IF NOT EXISTS to the query
-func (b CreateBuilder) IfNotExists() CreateBuilder {
+// ifNotExists adds IF NOT EXISTS to the query
+func (b CreateBuilder) ifNotExists() CreateBuilder {
 	return builder.Set(b, "IfNotExists", true).(CreateBuilder)
 }
 

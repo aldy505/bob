@@ -7,7 +7,7 @@ import (
 )
 
 func TestDrop(t *testing.T) {
-	t.Run("should be able to create regular drop query", func (t *testing.T)  {
+	t.Run("should be able to create regular drop query", func(t *testing.T) {
 		sql, _, err := bob.DropTable("users").ToSql()
 		if err != nil {
 			t.Error(err)
@@ -37,4 +37,4 @@ func TestDrop(t *testing.T) {
 			t.Error(err)
 		}
 	})
-} 
+}

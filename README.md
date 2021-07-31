@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/aldy505/bob.svg)](https://pkg.go.dev/github.com/aldy505/bob) [![Go Report Card](https://goreportcard.com/badge/github.com/aldy505/bob)](https://goreportcard.com/report/github.com/aldy505/bob) ![GitHub](https://img.shields.io/github/license/aldy505/bob) [![CodeFactor](https://www.codefactor.io/repository/github/aldy505/bob/badge)](https://www.codefactor.io/repository/github/aldy505/bob) [![codecov](https://codecov.io/gh/aldy505/bob/branch/master/graph/badge.svg?token=Noeexg5xEJ)](https://codecov.io/gh/aldy505/bob) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9b78970127c74c1a923533e05f65848d)](https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aldy505/bob&amp;utm_campaign=Badge_Grade) [![Build test](https://github.com/aldy505/bob/actions/workflows/build.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/build.yml) [![Test and coverage](https://github.com/aldy505/bob/actions/workflows/coverage.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/coverage.yml)
 
-Think of this as an extension of [Squirrel](https://github.com/Masterminds/squirrel) with functionability like [Knex](https://knexjs.org/). I still use Squirrel for other types of queries (insert, select, and all that), but I needed some SQL builder for create table and some other stuffs.
+Think of this as an extension of [Squirrel](https://github.com/Masterminds/squirrel) with functionability like [Knex](https://knexjs.org/). I still use Squirrel for other types of queries (insert, select, and all that), but I needed some SQL builder for create table and some other stuffs. Including database creation & upsert.
 
 Oh, and of course, heavily inspired by [Bob the Builder](https://en.wikipedia.org/wiki/Bob_the_Builder).
 
@@ -116,6 +116,44 @@ func main() {
 }
 ```
 
+### Upsert
+
+```go
+func main() {
+  sql, args, err := bob.
+    // Notice that you should give database dialect on the second params.
+    // Available database dialect are MySQL, PostgreSQL, SQLite, and MSSQL.
+    Upsert("users", bob.MySQL).
+    Columns("name", "email", "age").
+    // You could do multiple Values() call, but I'd suggest to not do it.
+    // Because this is an upsert function, not an insert one.
+    Values("Thomas Mueler", "tmueler@something.com", 25).
+    Replace("age", 25).
+    PlaceholderFormat(bob.Question).
+    ToSql()
+
+  // Another example for PostgreSQL
+  sql, args, err = bob.
+    Upsert("users", bob.PostgreSQL).
+    Columns("name", "email", "age").
+    Values("Billy Urtha", "billu@something.com", 30).
+    Key("email").
+    Replace("age", 40).
+    PlaceholderFormat(bob.Dollar).
+    ToSql()
+  
+  // One more time, for MSSQL / SQL Server.
+  sql, args, err = bob.
+    Upsert("users", bob.MSSQL).
+    Columns("name", "email", "age").
+    Values("George Rust", "georgee@something.com", 19).
+    Key("email", "georgee@something.com").
+    Replace("age", 18).
+    PlaceholderFormat(bob.AtP).
+    ToSql()
+}
+```
+
 ### Placeholder format / Dialect
 
 Default placeholder is a question mark (MySQL-like). If you want to change it, simply use something like this:
@@ -222,12 +260,12 @@ func main() {
 * `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
 * `bob.RenameTable(currentTable, desiredName)` - Rename a table (`rename table "users" to "people"`)
 * `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
+* `bob.Upsert(tableName, dialect)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
 
 ### TODO
 
 Meaning these are some ideas for the future development of Bob.
 
-* `bob.Upsert(tableName)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
 * `bob.ExecWith()` - Just like Squirrel's [ExecWith](https://pkg.go.dev/github.com/Masterminds/squirrel?utm_source=godoc#ExecWith)
 * `bob.Count(tableName, columnName)` - Count query (`select count("active") from "users"`)
 
