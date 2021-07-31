@@ -24,15 +24,17 @@ func init() {
 	builder.Register(UpsertBuilder{}, upsertData{})
 }
 
+// dialect specifies database dialect used.
 func (u UpsertBuilder) dialect(db int) UpsertBuilder {
 	return builder.Set(u, "Dialect", db).(UpsertBuilder)
 }
 
-// Table sets which table to be dropped
-func (u UpsertBuilder) Into(name string) UpsertBuilder {
+// Table sets which table to be dropped.
+func (u UpsertBuilder) into(name string) UpsertBuilder {
 	return builder.Set(u, "Into", name).(UpsertBuilder)
 }
 
+// Columns sets the columns for the data to be inserted.
 func (u UpsertBuilder) Columns(columns ...string) UpsertBuilder {
 	return builder.Extend(u, "Columns", columns).(UpsertBuilder)
 }
@@ -44,6 +46,8 @@ func (u UpsertBuilder) Values(values ...interface{}) UpsertBuilder {
 	return builder.Append(u, "Values", values).(UpsertBuilder)
 }
 
+// Key specifies which key to be checked on conflict.
+// Must be used on PostgreSQL and SQLite.
 func (u UpsertBuilder) Key(key ...interface{}) UpsertBuilder {
 	var value interface{}
 	column := key[0]
@@ -55,6 +59,8 @@ func (u UpsertBuilder) Key(key ...interface{}) UpsertBuilder {
 	return builder.Extend(u, "Key", []interface{}{column, value}).(UpsertBuilder)
 }
 
+// Replace sets the column and value respectively for the data to be changed on
+// a specific row. 
 func (u UpsertBuilder) Replace(column interface{}, value interface{}) UpsertBuilder {
 	return builder.Append(u, "Replace", []interface{}{column, value}).(UpsertBuilder)
 }

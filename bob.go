@@ -69,7 +69,7 @@ func (b BobBuilderType) Truncate(table string) TruncateBuilder {
 }
 
 func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
-	return UpsertBuilder(b).dialect(dialect).Into(table)
+	return UpsertBuilder(b).dialect(dialect).into(table)
 }
 
 // BobStmtBuilder is the parent builder for BobBuilderType
