@@ -14,21 +14,21 @@ func createArgs(keys ...interface{}) []interface{} {
 }
 
 // isIn checks if an array have a value
-func isIn(arr []string, value string) bool {
-	for _, item := range arr {
-		if item == value {
-			return true
-		}
-	}
-	return false
-}
+// func isIn(arr []string, value string) bool {
+// 	for _, item := range arr {
+// 		if item == value {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
 
-// findPosition search for value position on an array
-func findPosition(arr []string, value string) int {
-	for i, item := range arr {
-		if item == value {
-			return i
-		}
-	}
-	return -1
-}
+// // findPosition search for value position on an array
+// func findPosition(arr []string, value string) int {
+// 	for i, item := range arr {
+// 		if item == value {
+// 			return i
+// 		}
+// 	}
+// 	return -1
+// }

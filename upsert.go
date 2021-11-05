@@ -1,7 +1,6 @@
 package bob
 
 import (
-	"bytes"
 	"errors"
 	"strings"
 
@@ -98,7 +97,7 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 		return
 	}
 
-	sql := &bytes.Buffer{}
+	var sql strings.Builder
 
 	if d.Dialect == MSSQL {
 		if len(d.Key) == 0 {

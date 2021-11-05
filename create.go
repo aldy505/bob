@@ -1,7 +1,6 @@
 package bob
 
 import (
-	"bytes"
 	"errors"
 	"strings"
 
@@ -205,7 +204,7 @@ func (d *createData) ToSql() (sqlStr string, args []interface{}, err error) {
 		return
 	}
 
-	sql := &bytes.Buffer{}
+	var sql strings.Builder
 
 	sql.WriteString("CREATE TABLE ")
 

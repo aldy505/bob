@@ -1,8 +1,8 @@
 package bob
 
 import (
-	"bytes"
 	"errors"
+	"strings"
 
 	"github.com/lann/builder"
 )
@@ -50,7 +50,7 @@ func (h HasBuilder) ToSql() (string, []interface{}, error) {
 
 // ToSql returns 3 variables filled out with the correct values based on bindings, etc.
 func (d *hasData) ToSql() (sqlStr string, args []interface{}, err error) {
-	sql := &bytes.Buffer{}
+	var sql strings.Builder
 	if d.Name == "" {
 		err = errors.New("has statement should have a table name")
 		return
