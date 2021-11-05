@@ -89,10 +89,27 @@ func main() {
   if err != nil {
     log.Fatal(err)
   }
+  // sql = "DROP TABLE users;"
+
+  sql, _, err = bob.DropTableIfExists("users").ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+  // sql = "DROP TABLE IF EXISTS users;"
+
+  sql, _, err = bob.DropTable("users").Cascade().ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+  // sql = "DROP TABLE users CASCADE;"
+
+  sql, _, err = bob.DropTable("users").Restrict().ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+  // sql = "DROP TABLE users RESTRICT;"
 }
 ```
-
-You could also do `bob.DropTableIfExists("users")` to output a `DROP TABLE IF EXISTS "users"` query.
 
 ### Truncate table
 
