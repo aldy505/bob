@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/aldy505/bob/util"
 	"github.com/lann/builder"
 )
 
@@ -21,12 +20,14 @@ func init() {
 	builder.Register(HasBuilder{}, hasData{})
 }
 
-// HasTable checks for a table's existence by tableName, resolving with a boolean to signal if the table exists.
+// HasTable checks for a table's existence by tableName,
+// resolving with a boolean to signal if the table exists.
 func (h HasBuilder) HasTable(table string) HasBuilder {
 	return builder.Set(h, "Name", table).(HasBuilder)
 }
 
-// HasColumn checks if a column exists in the current table, resolves the promise with a boolean, true if the column exists, false otherwise.
+// HasColumn checks if a column exists in the current table,
+// resolves the promise with a boolean, true if the column exists, false otherwise.
 func (h HasBuilder) HasColumn(column string) HasBuilder {
 	return builder.Set(h, "Column", column).(HasBuilder)
 }
@@ -69,6 +70,6 @@ func (d *hasData) ToSql() (sqlStr string, args []interface{}, err error) {
 	}
 
 	sqlStr = ReplacePlaceholder(sql.String(), d.Placeholder)
-	args = util.CreateArgs(d.Name, d.Column, d.Schema)
+	args = createArgs(d.Name, d.Column, d.Schema)
 	return
 }

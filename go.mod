@@ -1,6 +1,6 @@
 module github.com/aldy505/bob
 
-go 1.16
+go 1.17
 
 require (
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0
