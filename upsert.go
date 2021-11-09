@@ -187,6 +187,19 @@ func (d *upsertData) ToSql() (sqlStr string, args []interface{}, err error) {
 
 	sql.WriteString(";")
 
+	if d.Placeholder == "" {
+		switch d.Dialect {
+		case MySQL:
+			d.Placeholder = Question
+		case PostgreSQL:
+			d.Placeholder = Dollar
+		case SQLite:
+			d.Placeholder = Question
+		case MSSQL:
+			d.Placeholder = AtP
+		}
+	}
+
 	sqlStr = ReplacePlaceholder(sql.String(), d.Placeholder)
 	return
 }

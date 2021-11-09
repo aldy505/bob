@@ -153,3 +153,74 @@ func TestUpsert_EmitErrors(t *testing.T) {
 		}
 	})
 }
+
+func TestUpsert_WithoutReplacePlaceHolder(t *testing.T) {
+	t.Run("PostgreSQL", func(t *testing.T) {
+		sql, args, err := bob.
+			Upsert("users", bob.PostgreSQL).
+			Columns("name", "email").
+			Values("John Doe", "john@doe.com").
+			Key("email").
+			Replace("name", "John Does").
+			ToSql()
+		if err != nil {
+			t.Error(err)
+		}
+
+		desiredSql := "INSERT INTO \"users\" (\"name\", \"email\") VALUES ($1, $2) ON CONFLICT (\"email\") DO UPDATE SET \"name\" = $3;"
+		desiredArgs := []interface{}{"John Doe", "john@doe.com", "John Does"}
+
+		if sql != desiredSql {
+			t.Error("sql is not the same as result: ", sql)
+		}
+		if !reflect.DeepEqual(args, desiredArgs) {
+			t.Error("args is not the same as result: ", args)
+		}
+	})
+
+	t.Run("MSSQL", func(t *testing.T) {
+		sql, args, err := bob.
+			Upsert("users", bob.MSSQL).
+			Columns("name", "email").
+			Values("John Doe", "john@doe.com").
+			Key("email", "john@doe.com").
+			Replace("name", "John Does").
+			ToSql()
+		if err != nil {
+			t.Error(err)
+		}
+	
+		desiredSql := "IF NOT EXISTS (SELECT * FROM \"users\" WHERE \"email\" = @p1) INSERT INTO \"users\" (\"name\", \"email\") VALUES (@p2, @p3) ELSE UPDATE \"users\" SET \"name\" = @p4 WHERE \"email\" = @p5;"
+		desiredArgs := []interface{}{"john@doe.com", "John Doe", "john@doe.com", "John Does", "john@doe.com"}
+	
+		if sql != desiredSql {
+			t.Error("sql is not the same as result: ", sql)
+		}
+		if !reflect.DeepEqual(args, desiredArgs) {
+			t.Error("args is not the same as result: ", args)
+		}
+	})
+	
+	t.Run("SQLite", func(t *testing.T) {
+		sql, args, err := bob.
+			Upsert("users", bob.SQLite).
+			Columns("name", "email").
+			Values("John Doe", "john@doe.com").
+			Key("email").
+			Replace("name", "John Does").
+			ToSql()
+		if err != nil {
+			t.Error(err)
+		}
+
+		desiredSql := "INSERT INTO \"users\" (\"name\", \"email\") VALUES (?, ?) ON CONFLICT (\"email\") DO UPDATE SET \"name\" = ?;"
+		desiredArgs := []interface{}{"John Doe", "john@doe.com", "John Does"}
+
+		if sql != desiredSql {
+			t.Error("sql is not the same as result: ", sql)
+		}
+		if !reflect.DeepEqual(args, desiredArgs) {
+			t.Error("args is not the same as result: ", args)
+		}
+	})
+}
