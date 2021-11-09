@@ -40,6 +40,16 @@ func (b BobBuilderType) CreateTableIfNotExists(table string) CreateBuilder {
 	return CreateBuilder(b).name(table).ifNotExists()
 }
 
+// CreateIndex creates an index with CreateIndexBuilder interface.
+func (b BobBuilderType) CreateIndex(name string) IndexBuilder {
+	return IndexBuilder(b).name(name)
+}
+
+// CreateIndexIfNotExists creates an index with CreateIndexBuilder interface, if the index doesn't exists.
+func (b BobBuilderType) CreateIndexIfNotExists(name string) IndexBuilder {
+	return IndexBuilder(b).name(name).ifNotExists()
+}
+
 // HasTable checks if a table exists with HasBuilder interface
 func (b BobBuilderType) HasTable(table string) HasBuilder {
 	return HasBuilder(b).HasTable(table)
@@ -171,4 +181,14 @@ func Truncate(table string) TruncateBuilder {
 //         ToSql()
 func Upsert(table string, dialect int) UpsertBuilder {
 	return BobStmtBuilder.Upsert(table, dialect)
+}
+
+// CreateIndex creates an index with CreateIndexBuilder interface.
+func CreateIndex(name string) IndexBuilder {
+	return BobStmtBuilder.CreateIndex(name)
+}
+
+// CreateIndexIfNotExists creates an index with CreateIndexBuilder interface, if the index doesn't exists.
+func CreateIndexIfNotExists(name string) IndexBuilder {
+	return BobStmtBuilder.CreateIndexIfNotExists(name)
 }
