@@ -58,7 +58,7 @@ func TestCreateIndex_Error(t *testing.T) {
 			t.Fatal("error is not equal to result:", err.Error())
 		}
 	})
-	
+
 	t.Run("without table name", func(t *testing.T) {
 		_, _, err := bob.
 			CreateIndex("name").

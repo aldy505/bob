@@ -10,18 +10,18 @@ import (
 type IndexBuilder builder.Builder
 
 type indexData struct {
-	Unique bool
-	Spatial bool
-	Fulltext bool
-	Name string
-	TableName string
-	Columns []IndexColumn
+	Unique      bool
+	Spatial     bool
+	Fulltext    bool
+	Name        string
+	TableName   string
+	Columns     []IndexColumn
 	IfNotExists bool
 }
 
 type IndexColumn struct {
-	Name string
-	Extras []string
+	Name    string
+	Extras  []string
 	Collate string
 }
 
@@ -76,7 +76,7 @@ func (i *indexData) ToSql() (sqlStr string, args []interface{}, err error) {
 		err = errors.New("should at least specify one column for create index statement")
 		return
 	}
-	
+
 	var sql strings.Builder
 
 	sql.WriteString("CREATE ")
@@ -121,7 +121,7 @@ func (i *indexData) ToSql() (sqlStr string, args []interface{}, err error) {
 	sql.WriteString("(")
 	sql.WriteString(strings.Join(columns, ", "))
 	sql.WriteString(");")
-	
+
 	sqlStr = sql.String()
 	return
 }
