@@ -59,6 +59,27 @@ For any other types, please use `AddColumn()`.
 
 Another builder of `bob.CreateTableIfNotExists()` is also available.
 
+### Create index
+
+```go
+func main() {
+  sql, _, err := bob.
+		CreateIndex("idx_email").
+		On("users").
+    // To create a CREATE UNIQUE INDEX ...
+    Unique().
+    // Method "Spatial()" and "FullText()" are also available.
+    // You can specify as many columns as you like.
+		Columns(bob.IndexColumn{Name: "email", Collate: "DEFAULT", Extras: []string{"ASC"}}).
+		ToSql()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+```
+
+Another builder of `bob.CreateIndexIfNotExists()` is also available.
+
 ### Check if a table exists
 
 ```go
@@ -146,7 +167,6 @@ func main() {
     // Because this is an upsert function, not an insert one.
     Values("Thomas Mueler", "tmueler@something.com", 25).
     Replace("age", 25).
-    PlaceholderFormat(bob.Question).
     ToSql()
 
   // Another example for PostgreSQL
@@ -156,7 +176,6 @@ func main() {
     Values("Billy Urtha", "billu@something.com", 30).
     Key("email").
     Replace("age", 40).
-    PlaceholderFormat(bob.Dollar).
     ToSql()
   
   // One more time, for MSSQL / SQL Server.
@@ -166,7 +185,6 @@ func main() {
     Values("George Rust", "georgee@something.com", 19).
     Key("email", "georgee@something.com").
     Replace("age", 18).
-    PlaceholderFormat(bob.AtP).
     ToSql()
 }
 ```
@@ -271,6 +289,8 @@ func main() {
 
 * `bob.CreateTable(tableName)` - Basic SQL create table
 * `bob.CreateTableIfNotExists(tableName)` - Create table if not exists
+* `bob.CreateIndex(indexName)` - Basic SQL create index
+* `bob.CreateIndexIfNotExists(tableName)` - Create index if not exists
 * `bob.HasTable(tableName)` - Checks if column exists (return error if false, check example above for error handling)
 * `bob.HasColumn(columnName)` - Check if a column exists on current table
 * `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
