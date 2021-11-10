@@ -84,6 +84,22 @@ func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
 	return UpsertBuilder(b).dialect(dialect).into(table)
 }
 
+func (b BobBuilderType) DropColumn(table, column string) AlterBuilder {
+	return AlterBuilder(b).whatToAlter(alterDropColumn).tableName(table).firstKey(column)
+}
+
+func (b BobBuilderType) DropConstraint(table, constraint string) AlterBuilder {
+	return AlterBuilder(b).whatToAlter(alterDropConstraint).tableName(table).firstKey(constraint)
+}
+
+func (b BobBuilderType) RenameColumn(table, from, to string) AlterBuilder {
+	return AlterBuilder(b).whatToAlter(alterRenameColumn).tableName(table).firstKey(from).secondKey(to)
+}
+
+func (b BobBuilderType) RenameConstraint(table, from, to string) AlterBuilder {
+	return AlterBuilder(b).whatToAlter(alterRenameConstraint).tableName(table).firstKey(from).secondKey(to)
+}
+
 // BobStmtBuilder is the parent builder for BobBuilderType
 var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 
@@ -191,4 +207,20 @@ func CreateIndex(name string) IndexBuilder {
 // CreateIndexIfNotExists creates an index with CreateIndexBuilder interface, if the index doesn't exists.
 func CreateIndexIfNotExists(name string) IndexBuilder {
 	return BobStmtBuilder.CreateIndexIfNotExists(name)
+}
+
+func DropColumn(table, column string) AlterBuilder {
+	return BobStmtBuilder.DropColumn(table, column)
+}
+
+func DropConstraint(table, constraint string) AlterBuilder {
+	return BobStmtBuilder.DropConstraint(table, constraint)
+}
+
+func RenameColumn(table, from, to string) AlterBuilder {
+	return BobStmtBuilder.RenameColumn(table, from, to)
+}
+
+func RenameConstraint(table, from, to string) AlterBuilder {
+	return BobStmtBuilder.RenameConstraint(table, from, to)
 }
