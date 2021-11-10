@@ -64,14 +64,14 @@ Another builder of `bob.CreateTableIfNotExists()` is also available.
 ```go
 func main() {
   sql, _, err := bob.
-		CreateIndex("idx_email").
-		On("users").
+    CreateIndex("idx_email").
+    On("users").
     // To create a CREATE UNIQUE INDEX ...
     Unique().
     // Method "Spatial()" and "FullText()" are also available.
     // You can specify as many columns as you like.
-		Columns(bob.IndexColumn{Name: "email", Collate: "DEFAULT", Extras: []string{"ASC"}}).
-		ToSql()
+    Columns(bob.IndexColumn{Name: "email", Collate: "DEFAULT", Extras: []string{"ASC"}}).
+    ToSql()
   if err != nil {
     log.Fatal(err)
   }
