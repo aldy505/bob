@@ -23,4 +23,4 @@ jobs:
         run: go vet
 
       - name: Test
-        run: go test -v -race -coverprofile=coverage.out -covermode=atomic -failfast
+        run: go test -v -race -covermode=atomic -failfast
