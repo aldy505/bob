@@ -2,7 +2,6 @@ package bob_test
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/aldy505/bob"
 )
@@ -33,53 +32,53 @@ func ExampleHasTable() {
 }
 
 func ExampleHasColumn() {
-	sql, args, err := bob.HasColumn("email").ToSql()
+	sql, args, err := bob.HasColumn("email").HasTable("users").ToSql()
 	if err != nil {
 		fmt.Printf("Handle this error: %v", err)
 	}
 
 	fmt.Printf("sql: %s, args: %v", sql, args)
-	// Output: sql: SELECT * FROM information_schema.columns WHERE table_name = ? AND table_schema = current_schema();, args: [users]
+	// Output: sql: SELECT * FROM information_schema.columns WHERE table_name = ? AND column_name = ? AND table_schema = current_schema();, args: [users email]
 }
 
 func ExampleDropTable() {
 	sql, _, err := bob.DropTable("users").Cascade().ToSql()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Handle this error: %v", err)
 	}
 
 	fmt.Println(sql)
-	// Output: DROP TABLE users CASCADE;
+	// Output: DROP TABLE "users" CASCADE;
 }
 
 func ExampleDropTableIfExists() {
 	sql, _, err := bob.DropTableIfExists("users").ToSql()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Handle this error: %v", err)
 	}
 
 	fmt.Println(sql)
-	// Output: DROP TABLE IF EXISTS users;
+	// Output: DROP TABLE IF EXISTS "users";
 }
 
 func ExampleTruncate() {
 	sql, _, err := bob.Truncate("users").ToSql()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Handle this error: %v", err)
 	}
 
 	fmt.Println(sql)
-	// Output: TRUNCATE TABLE users;
+	// Output: TRUNCATE "users";
 }
 
 func ExampleRenameTable() {
 	sql, _, err := bob.RenameTable("users", "people").ToSql()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Handle this error: %v", err)
 	}
 
 	fmt.Println(sql)
-	// Output: ALTER TABLE users RENAME TO people;
+	// Output: RENAME TABLE "users" TO "people";
 }
 
 func ExampleUpsert() {
