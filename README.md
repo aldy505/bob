@@ -1,18 +1,51 @@
 # Bob - SQL Query Builder
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/aldy505/bob.svg)](https://pkg.go.dev/github.com/aldy505/bob) [![Go Report Card](https://goreportcard.com/badge/github.com/aldy505/bob)](https://goreportcard.com/report/github.com/aldy505/bob) ![GitHub](https://img.shields.io/github/license/aldy505/bob) [![CodeFactor](https://www.codefactor.io/repository/github/aldy505/bob/badge)](https://www.codefactor.io/repository/github/aldy505/bob) [![codecov](https://codecov.io/gh/aldy505/bob/branch/master/graph/badge.svg?token=Noeexg5xEJ)](https://codecov.io/gh/aldy505/bob) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9b78970127c74c1a923533e05f65848d)](https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aldy505/bob&amp;utm_campaign=Badge_Grade) [![Build test](https://github.com/aldy505/bob/actions/workflows/build.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/build.yml) [![Test and coverage](https://github.com/aldy505/bob/actions/workflows/coverage.yml/badge.svg)](https://github.com/aldy505/bob/actions/workflows/coverage.yml)
+[![Go Reference](pkg-go-dev-badge)](pkg-go-dev-link)
+[![Go Report Card](go-report-badge)](go-report-link)
+![GitHub](license-badge)
+[![CodeFactor](codefactor-badge)](codefactor-link)
+[![codecov](codecov-badge)](codecov-link)
+[![Codacy Badge](codacy-badge)](codacy-link)
+[![Test and coverage](actions-badge)](actions-link)
 
-Think of this as an extension of [Squirrel](https://github.com/Masterminds/squirrel) with functionability like [Knex](https://knexjs.org/). I still use Squirrel for other types of queries (insert, select, and all that), but I needed some SQL builder for create table and some other stuffs. Including database creation & upsert.
+Bob is an SQL builder library initially made as an extension for [Squirrel](squirrel-url)
+with functionality like [Knex](knex-url) (from the Node.js world). Squirrel itself
+doesn't provide other types of queries for creating a table, upsert,
+and some other things. Bob is meant to fill those gaps.
 
-Oh, and of course, heavily inspired by [Bob the Builder](https://en.wikipedia.org/wiki/Bob_the_Builder).
+The different between Bob and Squirrel is that Bob is solely a query builder.
+The users have to execute and manage the SQL connection themself.
+Meaning there are no ExecWith() function implemented on Bob, as you can
+find it on Squirrel.
+
+The purpose of an SQL query builder is to prevent any typo or mistypes
+on the SQL queries. Although also with that reason, Bob might not always
+have the right query for you, depending on what you are doing with the
+SQL query. It might sometimes be better for you to write the SQL query
+yourself, if your problem is specific and needs some micro-tweaks.
+
+With that being said, I hope you enjoy using Bob and consider starring or
+reporting any issues regarding the usage of Bob in your projects.
+
+Oh, and of course, heavily inspired by [Bob the Builder](bob-wikipedia).
+
+## Usage
 
 ```go
 import "github.com/aldy505/bob"
 ```
 
-## Usage
+Like any other Go projects when you're using Go modules, just put that
+text right there on the top of your projects, do `go mod tidy` and
+you are good to go.
 
-It's not ready for large-scale production yet (although I've already using it on one of my projects). But, the API is probably close to how you'd do things on Squirrel. 
+Either way, I'm not 100% confident enough to say that this thing is
+production ready. But, the way I see it, it's good enough to be used
+on a production-level applications. In fact, I'm using it on one of my
+current projects that's getting around 100-200 hits per day.
+
+If you have any feature request or improvement ideas for the project,
+please kindly open an issue 
 
 ### Create a table
 
@@ -177,7 +210,7 @@ func main() {
     Key("email").
     Replace("age", 40).
     ToSql()
-  
+
   // One more time, for MSSQL / SQL Server.
   sql, args, err = bob.
     Upsert("users", bob.MSSQL).
@@ -276,7 +309,7 @@ func main() {
     if err != nil {
       log.Fatal(err)
     }
-    
+
     _, err = db.Query(context.Background(), inventoryQuery[i])
     if err != nil {
       log.Fatal(err)
@@ -299,13 +332,6 @@ func main() {
 * `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
 * `bob.Upsert(tableName, dialect)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
 
-### TODO
-
-Meaning these are some ideas for the future development of Bob.
-
-* `bob.ExecWith()` - Just like Squirrel's [ExecWith](https://pkg.go.dev/github.com/Masterminds/squirrel?utm_source=godoc#ExecWith)
-* `bob.Count(tableName, columnName)` - Count query (`select count("active") from "users"`)
-
 ## Contributing
 
 Contributions are always welcome! As long as you add a test for your changes.
@@ -313,3 +339,20 @@ Contributions are always welcome! As long as you add a test for your changes.
 ## License
 
 Bob is licensed under [MIT license](./LICENSE)
+
+[squirrel-url]: https://github.com/Masterminds/squirrel
+[knex-url]: https://knexjs.org/
+[bob-wikipedia]: https://en.wikipedia.org/wiki/Bob_the_Builder
+[pkg-go-dev-badge]: https://pkg.go.dev/badge/github.com/aldy505/bob.svg
+[pkg-go-dev-link]: https://pkg.go.dev/github.com/aldy505/bob
+[go-report-badge]: https://goreportcard.com/badge/github.com/aldy505/bob
+[go-report-link]: https://goreportcard.com/report/github.com/aldy505/bob
+[license-badge]: https://img.shields.io/github/license/aldy505/bob
+[codefactor-link]: https://www.codefactor.io/repository/github/aldy505/bob
+[codefactor-badge]: https://www.codefactor.io/repository/github/aldy505/bob/badge
+[codecov-badge]: https://codecov.io/gh/aldy505/bob/branch/master/graph/badge.svg?token=Noeexg5xEJ
+[codecov-link]: https://codecov.io/gh/aldy505/bob
+[codacy-badge]: https://app.codacy.com/project/badge/Grade/9b78970127c74c1a923533e05f65848d
+[codacy-link]: https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aldy505/bob&amp;utm_campaign=Badge_Grade
+[actions-badge]: https://github.com/aldy505/bob/actions/workflows/coverage.yml/badge.svg
+[actions-link]: https://github.com/aldy505/bob/actions/workflows/coverage.yml
