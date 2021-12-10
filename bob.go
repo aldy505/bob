@@ -1,3 +1,26 @@
+// Bob is an SQL builder library initially made as an extension for Squirrel
+// with functionality like Knex (from the Node.js world). Squirrel itself
+// doesn't provide other types of queries for creating a table, upsert,
+// and some other things. Bob is meant to fill those gaps.
+//
+// The different between Bob and Squirrel is that Bob is solely a query builder.
+// The users have to execute and manage the SQL connection themself.
+// Meaning there are no ExecWith() function implemented on Bob, as you can
+// find it on Squirrel.
+//
+// The purpose of an SQL query builder is to prevent any typo or mistypes
+// on the SQL queries. Although also with that reason, Bob might not always
+// have the right query for you, depending on what you are doing with the
+// SQL query. It might sometimes be better for you to write the SQL query
+// yourself, if your problem is specific and needs some micro-tweaks.
+//
+// With that being said, I hope you enjoy using Bob and consider starring or
+// reporting any issues regarding the usage of Bob in your projects.
+//
+// MIT License
+//
+// Copyright (c) 2021-present Reinaldy Rafli and Bob collaborators
+//
 package bob
 
 import (
