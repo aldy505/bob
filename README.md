@@ -1,15 +1,15 @@
 # Bob - SQL Query Builder
 
-[![Go Reference](pkg-go-dev-badge)](pkg-go-dev-link)
-[![Go Report Card](go-report-badge)](go-report-link)
-![GitHub](license-badge)
-[![CodeFactor](codefactor-badge)](codefactor-link)
-[![codecov](codecov-badge)](codecov-link)
-[![Codacy Badge](codacy-badge)](codacy-link)
-[![Test and coverage](actions-badge)](actions-link)
+[![Go Reference][pkg-go-dev-badge]][pkg-go-dev-link]
+[![Go Report Card][go-report-badge]][go-report-link]
+![GitHub][license-badge]
+[![CodeFactor][codefactor-badge]][codefactor-link]
+[![codecov][codecov-badge]][codecov-link]
+[![Codacy Badge][codacy-badge]][codacy-link]
+[![Test and coverage][actions-badge]][actions-link]
 
-Bob is an SQL builder library initially made as an extension for [Squirrel](squirrel-url)
-with functionality like [Knex](knex-url) (from the Node.js world). Squirrel itself
+Bob is an SQL builder library initially made as an extension for [Squirrel][squirrel-url]
+with functionality like [Knex][knex-url] (from the Node.js world). Squirrel itself
 doesn't provide other types of queries for creating a table, upsert,
 and some other things. Bob is meant to fill those gaps.
 
@@ -27,7 +27,7 @@ yourself, if your problem is specific and needs some micro-tweaks.
 With that being said, I hope you enjoy using Bob and consider starring or
 reporting any issues regarding the usage of Bob in your projects.
 
-Oh, and of course, heavily inspired by [Bob the Builder](bob-wikipedia).
+Oh, and of course, heavily inspired by [Bob the Builder][bob-wikipedia].
 
 ## Usage
 
@@ -45,7 +45,7 @@ on a production-level applications. In fact, I'm using it on one of my
 current projects that's getting around 100-200 hits per day.
 
 If you have any feature request or improvement ideas for the project,
-please kindly open an issue 
+please kindly open an issue
 
 ### Create a table
 
