@@ -103,22 +103,27 @@ func (b BobBuilderType) Truncate(table string) TruncateBuilder {
 	return TruncateBuilder(b).truncate(table)
 }
 
+// Upsert upserts a row into a table.
 func (b BobBuilderType) Upsert(table string, dialect int) UpsertBuilder {
 	return UpsertBuilder(b).dialect(dialect).into(table)
 }
 
+// DropTable drops (delete contents & remove) a table from the database if the table exists.
 func (b BobBuilderType) DropColumn(table, column string) AlterBuilder {
 	return AlterBuilder(b).whatToAlter(alterDropColumn).tableName(table).firstKey(column)
 }
 
+// DropConstraint drops (delete contents & remove) a constraint from the database.
 func (b BobBuilderType) DropConstraint(table, constraint string) AlterBuilder {
 	return AlterBuilder(b).whatToAlter(alterDropConstraint).tableName(table).firstKey(constraint)
 }
 
+// RenameColumn simply renames an exisisting column.
 func (b BobBuilderType) RenameColumn(table, from, to string) AlterBuilder {
 	return AlterBuilder(b).whatToAlter(alterRenameColumn).tableName(table).firstKey(from).secondKey(to)
 }
 
+// RenameConstraint simply renames an exisisting constraint.
 func (b BobBuilderType) RenameConstraint(table, from, to string) AlterBuilder {
 	return AlterBuilder(b).whatToAlter(alterRenameConstraint).tableName(table).firstKey(from).secondKey(to)
 }
@@ -128,22 +133,6 @@ var BobStmtBuilder = BobBuilderType(builder.EmptyBuilder)
 
 // CreateTable creates a table with CreateBuilder interface.
 // Refer to README for available column definition types.
-//
-//      // Note that CREATE TABLE doesn't returns args params.
-//      sql, _, err := bob.
-//        CreateTable("tableName").
-//        // The first parameter is the column's name.
-//        // The second parameters and so on forth are extras.
-//        StringColumn("id", "NOT NULL", "PRIMARY KEY", "AUTOINCREMENT").
-//        StringColumn("email", "NOT NULL", "UNIQUE").
-//        // See the list of available column definition types through pkg.go.dev or README.
-//        TextColumn("password").
-//        // Or add your custom type.
-//        AddColumn(bob.ColumnDef{Name: "tableName", Type: "customType", Extras: []string{"NOT NULL"}}).
-//        ToSql()
-//      if err != nil {
-//      // handle your error
-//      }
 func CreateTable(table string) CreateBuilder {
 	return BobStmtBuilder.CreateTable(table)
 }
@@ -185,39 +174,6 @@ func Truncate(table string) TruncateBuilder {
 
 // Upsert performs a UPSERT query with specified database dialect.
 // Supported database includes MySQL, PostgreSQL, SQLite and MSSQL.
-//
-//       // MySQL example:
-//       sql, args, err := bob.
-//         // Notice that you should give database dialect on the second params.
-//         // Available database dialect are MySQL, PostgreSQL, SQLite, and MSSQL.
-//         Upsert("users", bob.MySQL).
-//         Columns("name", "email", "age").
-//         // You could do multiple Values() call, but I'd suggest to not do it.
-//         // Because this is an upsert function, not an insert one.
-//         Values("Thomas Mueler", "tmueler@something.com", 25).
-//         Replace("age", 25).
-//         PlaceholderFormat(bob.Question).
-//         ToSql()
-//
-//       // Another example for PostgreSQL:
-//       sql, args, err = bob.
-//         Upsert("users", bob.PostgreSQL).
-//         Columns("name", "email", "age").
-//         Values("Billy Urtha", "billu@something.com", 30).
-//         Key("email").
-//         Replace("age", 40).
-//         PlaceholderFormat(bob.Dollar).
-//         ToSql()
-//
-//       // One more time, for MSSQL / SQL Server:
-//       sql, args, err = bob.
-//         Upsert("users", bob.MSSQL).
-//         Columns("name", "email", "age").
-//         Values("George Rust", "georgee@something.com", 19).
-//         Key("email", "georgee@something.com").
-//         Replace("age", 18).
-//         PlaceholderFormat(bob.AtP).
-//         ToSql()
 func Upsert(table string, dialect int) UpsertBuilder {
 	return BobStmtBuilder.Upsert(table, dialect)
 }
@@ -232,18 +188,22 @@ func CreateIndexIfNotExists(name string) IndexBuilder {
 	return BobStmtBuilder.CreateIndexIfNotExists(name)
 }
 
+// DropColumn drops (delete contents & remove) a column from the table.
 func DropColumn(table, column string) AlterBuilder {
 	return BobStmtBuilder.DropColumn(table, column)
 }
 
+// DropConstraint drops (delete contents & remove) a constraint from the table.
 func DropConstraint(table, constraint string) AlterBuilder {
 	return BobStmtBuilder.DropConstraint(table, constraint)
 }
 
+// RenameColumn simply renames an exisisting column.
 func RenameColumn(table, from, to string) AlterBuilder {
 	return BobStmtBuilder.RenameColumn(table, from, to)
 }
 
+// RenameConstraint simply renames an exisisting constraint.
 func RenameConstraint(table, from, to string) AlterBuilder {
 	return BobStmtBuilder.RenameConstraint(table, from, to)
 }
