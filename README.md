@@ -85,7 +85,7 @@ Available column definition types (please be aware that some only works on certa
 - `TimeStampColumn()` - Defaults to `TIMESTAMP`.
 - `TimeColumn()` - Defaults to `TIME`.
 - `DateColumn()` - Defaults to `DATE`.
-- `JSONColumn()` - Dafults to `JSON`. MySQL and Postgres only.
+- `JSONColumn()` - Defaults to `JSON`. MySQL and Postgres only.
 - `JSONBColumn()` - Defaults to `JSONB`. Postgres only.
 - `BlobColumn()` - Defaults to `BLOB`. MySQL and SQLite only.
 
