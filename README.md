@@ -13,9 +13,9 @@ with functionality like [Knex][knex-url] (from the Node.js world). Squirrel itse
 doesn't provide other types of queries for creating a table, upsert,
 and some other things. Bob is meant to fill those gaps.
 
-The different between Bob and Squirrel is that Bob is solely a query builder.
-The users have to execute and manage the SQL connection themself.
-Meaning there are no ExecWith() function implemented on Bob, as you can
+The difference between Bob and Squirrel is that Bob is solely a query builder.
+The users have to execute and manage the SQL connection themselves.
+Meaning there is no ExecWith() function implemented in Bob, as you can
 find it on Squirrel.
 
 The purpose of an SQL query builder is to prevent any typo or mistypes
@@ -41,7 +41,7 @@ you are good to go.
 
 Either way, I'm not 100% confident enough to say that this thing is
 production ready. But, the way I see it, it's good enough to be used
-on a production-level applications. In fact, I'm using it on one of my
+on a production-level application. In fact, I'm using it on one of my
 current projects that's getting around 100-200 hits per day.
 
 If you have any feature request or improvement ideas for the project,
@@ -57,7 +57,7 @@ func main() {
   sql, _, err := bob.
     CreateTable("tableName").
     // The first parameter is the column's name.
-    // The second parameters and so on forth are extras.
+    // The second parameter and so on forth are extras.
     StringColumn("id", "NOT NULL", "PRIMARY KEY", "AUTOINCREMENT").
     StringColumn("email", "NOT NULL", "UNIQUE").
     // See the list of available column definition types through pkg.go.dev or scroll down below.
@@ -72,21 +72,22 @@ func main() {
 ```
 
 Available column definition types (please be aware that some only works on certain database):
-* `StringColumn()` - Default to `VARCHAR(255)`
-* `TextColumn()` - Default to `TEXT`
-* `UUIDColumn()` - Defaults to `UUID`
-* `BooleanColumn()` - Defaults to `BOOLEAN`
-* `IntegerColumn()` - Defaults to `INTEGER`. Postgres and SQLite only.
-* `IntColumn()` - Defaults to `INT`. MySQL and MSSQL only.
-* `RealColumn()` - Defaults to `REAL`. Postgres, MSSQL, and SQLite only.
-* `FloatColumn()` - Defaults to `FLOAT`. Postgres and SQLite only.
-* `DateTimeColumn()` - Defaults to `DATETIME`.
-* `TimeStampColumn()` - Defaults to `TIMESTAMP`.
-* `TimeColumn()` - Defaults to `TIME`.
-* `DateColumn()` - Defaults to `DATE`.
-* `JSONColumn()` - Dafults to `JSON`. MySQL and Postgres only.
-* `JSONBColumn()` - Defaults to `JSONB`. Postgres only.
-* `BlobColumn()` - Defaults to `BLOB`. MySQL and SQLite only.
+
+- `StringColumn()` - Default to `VARCHAR(255)`
+- `TextColumn()` - Default to `TEXT`
+- `UUIDColumn()` - Defaults to `UUID`
+- `BooleanColumn()` - Defaults to `BOOLEAN`
+- `IntegerColumn()` - Defaults to `INTEGER`. Postgres and SQLite only.
+- `IntColumn()` - Defaults to `INT`. MySQL and MSSQL only.
+- `RealColumn()` - Defaults to `REAL`. Postgres, MSSQL, and SQLite only.
+- `FloatColumn()` - Defaults to `FLOAT`. Postgres and SQLite only.
+- `DateTimeColumn()` - Defaults to `DATETIME`.
+- `TimeStampColumn()` - Defaults to `TIMESTAMP`.
+- `TimeColumn()` - Defaults to `TIME`.
+- `DateColumn()` - Defaults to `DATE`.
+- `JSONColumn()` - Dafults to `JSON`. MySQL and Postgres only.
+- `JSONBColumn()` - Defaults to `JSONB`. Postgres only.
+- `BlobColumn()` - Defaults to `BLOB`. MySQL and SQLite only.
 
 For any other types, please use `AddColumn()`.
 
@@ -244,10 +245,11 @@ func main() {
 ```
 
 Available placeholder formats:
-* `bob.Question` - `INSERT INTO "users" (name) VALUES (?)`
-* `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
-* `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
-* `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
+
+- `bob.Question` - `INSERT INTO "users" (name) VALUES (?)`
+- `bob.Dollar` - `INSERT INTO "users" (name) VALUES ($1)`
+- `bob.Colon` - `INSERT INTO "users" (name) VALUES (:1)`
+- `bob.AtP` - `INSERT INTO "users" (name) VALUES (@p1)`
 
 ### With pgx (PostgreSQL)
 
@@ -264,7 +266,7 @@ import (
 func main() {
   db := pgx.Connect()
 
-  // Check if a table is exists
+  // Check if a table exists
   sql, args, err = bob.HasTable("users").PlaceholderFormat(bob.Dollar).ToSql()
   if err != nil {
     log.Fatal(err)
@@ -320,17 +322,17 @@ func main() {
 
 ## Features
 
-* `bob.CreateTable(tableName)` - Basic SQL create table
-* `bob.CreateTableIfNotExists(tableName)` - Create table if not exists
-* `bob.CreateIndex(indexName)` - Basic SQL create index
-* `bob.CreateIndexIfNotExists(tableName)` - Create index if not exists
-* `bob.HasTable(tableName)` - Checks if column exists (return error if false, check example above for error handling)
-* `bob.HasColumn(columnName)` - Check if a column exists on current table
-* `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
-* `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
-* `bob.RenameTable(currentTable, desiredName)` - Rename a table (`rename table "users" to "people"`)
-* `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
-* `bob.Upsert(tableName, dialect)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
+- `bob.CreateTable(tableName)` - Basic SQL create table
+- `bob.CreateTableIfNotExists(tableName)` - Create table if not exists
+- `bob.CreateIndex(indexName)` - Basic SQL create index
+- `bob.CreateIndexIfNotExists(tableName)` - Create index if not exists
+- `bob.HasTable(tableName)` - Checks if column exists (return error if false, check example above for error handling)
+- `bob.HasColumn(columnName)` - Check if a column exists on current table
+- `bob.DropTable(tableName)` - Drop a table (`drop table "users"`)
+- `bob.DropTableIfExists(tableName)` - Drop a table if exists (`drop table if exists "users"`)
+- `bob.RenameTable(currentTable, desiredName)` - Rename a table (`rename table "users" to "people"`)
+- `bob.Truncate(tableName)` - Truncate a table (`truncate "users"`)
+- `bob.Upsert(tableName, dialect)` - UPSERT function (`insert into "users" ("name", "email") values (?, ?) on duplicate key update email = ?`)
 
 ## Contributing
 
@@ -353,6 +355,6 @@ Bob is licensed under [MIT license](./LICENSE)
 [codecov-badge]: https://codecov.io/gh/aldy505/bob/branch/master/graph/badge.svg?token=Noeexg5xEJ
 [codecov-link]: https://codecov.io/gh/aldy505/bob
 [codacy-badge]: https://app.codacy.com/project/badge/Grade/9b78970127c74c1a923533e05f65848d
-[codacy-link]: https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aldy505/bob&amp;utm_campaign=Badge_Grade
+[codacy-link]: https://www.codacy.com/gh/aldy505/bob/dashboard?utm_source=github.com&utm_medium=referral&utm_content=aldy505/bob&utm_campaign=Badge_Grade
 [actions-badge]: https://github.com/aldy505/bob/actions/workflows/coverage.yml/badge.svg
 [actions-link]: https://github.com/aldy505/bob/actions/workflows/coverage.yml
